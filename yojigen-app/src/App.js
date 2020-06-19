@@ -14,12 +14,12 @@ class App extends Component {
     return (
       <Router>
         <Header />
-        <Route path='/Login' component={Login} />
-        <Route path='/Signup' component={Signup} />
-        <Route path='/Comment' component={Comment} />
+        <Route path='/login' component={Login} />
+        <Route path='/signup' component={Signup} />
+        <Route path='/thread/comment/:id' component={Comment} />
         <Route exact path='/' component={Thread} />
-        <Route path='/Edit' component={Edit} />
-        <Route path='/Create' component={Create} />
+        <Route path='/thread/edit/:id' component={Edit} />
+        <Route path='/thread/create' component={Create} />
       </Router>
     )
   }
