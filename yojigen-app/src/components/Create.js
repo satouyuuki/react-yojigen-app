@@ -25,12 +25,18 @@ class Create extends Component {
       this.state.title === '' ||
       this.state.description === ''
     ) return;
+    const newThread = {
+      title: this.state.title,
+      description: this.state.description,
+      created_date: new Date(),
+      updated_date: new Date()
+    }
     fetch('http://localhost:3000/thread', {
       method: 'post',
       headers: {
         "Content-type": 'application/json'
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify(newThread)
     })
       .then(res => res.json())
       .then(data => {

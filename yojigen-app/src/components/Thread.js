@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import moment from 'moment'
 class Thread extends Component {
   constructor(props) {
     super(props);
@@ -31,6 +31,7 @@ class Thread extends Component {
                 <li key={thread.id}>
                   <Link to={`/thread/comment/${thread.id}`}>
                     {thread.title}
+                    date: {moment(thread.updated_date).format('YYYY-MM-DD')}
                   </Link>
                   <button onClick={this.editPage.bind(this, thread.id)}>編集</button>
                 </li>

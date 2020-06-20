@@ -38,13 +38,19 @@ class Edit extends Component {
       this.state.title === '' ||
       this.state.description === ''
     ) return;
+    const updatedThread = {
+      title: this.state.title,
+      description: this.state.description,
+      created_date: this.state.created_date,
+      updated_date: new Date()
+    }
     const id = this.props.match.params.id;
     fetch(`http://localhost:3000/thread/${id}`, {
       method: 'put',
       headers: {
         "Content-type": 'application/json'
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify(updatedThread)
     })
       .then(res => res.json())
       .then(data => {

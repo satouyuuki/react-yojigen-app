@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import moment from 'moment';
 class Comment extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +12,6 @@ class Comment extends Component {
   }
   componentDidMount() {
     const id = this.props.match.params.id;
-    console.log(id);
     fetch(`http://localhost:3000/thread/${id}`)
       .then(res => res.json())
       .then(data => {
@@ -25,8 +24,11 @@ class Comment extends Component {
     fetch(`http://localhost:3000/comment`)
       .then(res => res.json())
       .then(data => {
+        const threadComment = data.filter(comment =>
+          comment.threadId == id
+        );
         this.setState({
-          comments: data
+          comments: threadComment
         })
       })
       .catch(err => console.log(err));
@@ -44,7 +46,9 @@ class Comment extends Component {
     const id = this.props.match.params.id;
     const newComment = {
       threadId: id,
-      comment: this.state.comment
+      comment: this.state.comment,
+      created_date: new Date(),
+      updated_date: new Date()
     }
 
     fetch(`http://localhost:3000/comment`, {
@@ -57,6 +61,11 @@ class Comment extends Component {
       .then(res => res.json())
       .then(data => {
         console.log(data);
+        const newComment = this.state.comments;
+        newComment.push(data);
+        this.setState({
+          comments: newComment
+        })
       })
       .catch(err => console.log(err));
     e.preventDefault();
@@ -71,12 +80,19 @@ class Comment extends Component {
           <p>
             {this.state.thread.description}
           </p>
+          <p>
+            作成日: {moment(this.state.thread.created_date).format('YYYY-MM-DD')}
+          </p>
+          <p>
+            最終更新日: {moment(this.state.thread.updated_date).format('YYYY-MM-DD')}
+          </p>
         </div>
         <ul>
           {
             this.state.comments.map(comment =>
               <li key={comment.id}>
                 {comment.comment}
+                作成日: {moment(comment.created_date).format('YYYY-MM-DD')}
               </li>
             )
           }
