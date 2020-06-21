@@ -12,6 +12,7 @@ class Thread extends Component {
     fetch('http://localhost:3000/thread')
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         this.setState({
           threads: data
         })
