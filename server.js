@@ -88,15 +88,17 @@ app.post('/thread', authenticateToken, async (req, res) => {
 });
 
 // create a comment
-app.post('/comment', async (req, res) => {
+app.post('/comment', authenticateToken, async (req, res) => {
   try {
+    const { id } = await getCurrentUserId(req.user);
+    console.log(id);
     const body = req.body;
     const newBody = await pool.query(
       "insert into comments (comment, thread_id, user_id) values ($1, $2, $3) RETURNING *",
       [
         body.comment,
         body.thread_id,
-        body.user_id
+        id
       ]
     );
     res.json(newBody.rows[0]);
@@ -158,8 +160,18 @@ app.get('/user', async (req, res) => {
 app.get('/thread/:id', async (req, res) => {
   try {
     const id = req.params.id;
-    const allThread = await pool.query("select * from threads WHERE id = $1", [id]);
-    res.json(allThread.rows[0]);
+    const threadQuery = {
+      text: `select 
+  threads.*,
+  coalesce (json_agg(comments), '[]'::json) as comments
+from threads
+  left outer join comments on threads.id = comments.thread_id
+where threads.id = $1
+GROUP BY threads.id;`,
+      params: [id]
+    }
+    const allThread = await pool.query(threadQuery.text, threadQuery.params);
+    res.json(allThread.rows);
   } catch (err) {
     console.log(err.message);
   }
@@ -223,20 +235,24 @@ app.put('/user/:id', async (req, res) => {
 });
 
 // update a comment
-app.put('/comment/:id', async (req, res) => {
+app.put('/comment/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const body = req.body;
-    
-    const updatedBody = await pool.query(
-      "UPDATE comments SET comment = $1, updated_date = $2 WHERE id = $3 RETURNING *",
-      [
-        body.comment,
-        new Date(),
-        id,
-      ]
-    );
-    res.json(updatedBody.rows[0]);
+    const userId = await getCurrentUserId(req.user);
+    if (userId.id !== req.body.user_id) {
+      return res.send({ message: "編集できません" })
+    } else {
+      const updatedBody = await pool.query(
+        "UPDATE comments SET comment = $1, updated_date = $2 WHERE id = $3 RETURNING *",
+        [
+          body.comment,
+          new Date(),
+          id,
+        ]
+      );
+      res.json(updatedBody.rows[0]);
+    }
   } catch (err) {
     console.log(err.message);
   }
@@ -263,13 +279,21 @@ app.delete('/thread/:id', authenticateToken, async (req, res) => {
 });
 
 // delete a comment
-app.delete('/comment/:id', async (req, res) => {
+app.delete('/comment/:id', authenticateToken, async (req, res) => {
   try {
-    const id = req.params.id;
-    const deleteBody = await pool.query(
-      "delete from comments where id = $1 RETURNING *", [id]
-    );
-    res.json(deleteBody.rows[0]);
+    const userId = await getCurrentUserId(req.user);
+    console.log(userId.id);
+    console.log(req.body.user_id);
+    if (userId.id !== req.body.user_id) {
+      return res.send({ message: "削除できません" })
+    } else {
+      const id = req.params.id;
+      const deleteBody = await pool.query(
+        "delete from comments where id = $1 RETURNING *", [id]
+      );
+      res.json(deleteBody.rows[0]);
+    }
+
   } catch (err) {
     console.log(err.message);
   }
