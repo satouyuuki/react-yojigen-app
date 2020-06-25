@@ -6,7 +6,8 @@ class Edit extends Component {
     super(props);
     this.state = {
       title: '',
-      description: ''
+      description: '',
+      userId: ''
     }
   }
   componentDidMount() {
@@ -17,7 +18,8 @@ class Edit extends Component {
       .then(data => {
         this.setState({
           title: data.title,
-          description: data.description
+          description: data.description,
+          userId: data.user_id
         })
       })
       .catch(err => console.log(err));
@@ -38,18 +40,26 @@ class Edit extends Component {
       this.state.title === '' ||
       this.state.description === ''
     ) return;
+    const updatedThread = {
+      title: this.state.title,
+      description: this.state.description,
+      updated_date: new Date(),
+      user_id: this.state.userId
+    }
     const id = this.props.match.params.id;
+    const token = "Bearer " + localStorage.getItem('token');
     fetch(`http://localhost:3000/thread/${id}`, {
       method: 'put',
       headers: {
-        "Content-type": 'application/json'
+        "Content-type": 'application/json',
+        "Authorization": token
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify(updatedThread)
     })
       .then(res => res.json())
       .then(data => {
         console.log(data);
-        this.props.history.push('/');
+        // this.props.history.push('/');
       })
       .catch(err => console.log(err));
     e.preventDefault();
@@ -76,6 +86,7 @@ class Edit extends Component {
           />
         </div>
         <input type="submit" value="送信" />
+        <input type="hidden" value={this.state.userId}/>
       </form>
     )
   }

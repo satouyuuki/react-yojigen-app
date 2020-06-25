@@ -41,7 +41,10 @@ class Signup extends Component {
       .then(res => res.json())
       .then(data => {
         console.log(data);
-        this.props.history.push('/');
+        this.setState({ name: '' });
+        this.setState({ email: '' });
+        this.setState({ password: '' });
+        // this.props.history.push('/');
       })
       .catch(err => console.log(err));
     e.preventDefault();

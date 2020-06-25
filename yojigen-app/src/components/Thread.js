@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
+import moment from 'moment'
 class Thread extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +12,7 @@ class Thread extends Component {
     fetch('http://localhost:3000/thread')
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         this.setState({
           threads: data
         })
@@ -20,6 +21,28 @@ class Thread extends Component {
   }
   editPage(id) {
     this.props.history.push(`/thread/edit/${id}`);
+  }
+  handleDeleteThread(id) {
+    const token = "Bearer " + localStorage.getItem('token');
+    const allThreads = this.state.threads;
+    const deleteThread = allThreads.filter(thread => thread.id === id);
+    fetch(`http://localhost:3000/thread/${id}`, {
+      method: 'delete',
+      headers: {
+        "Content-type": 'application/json',
+        "Authorization": token
+      },
+      body: JSON.stringify(deleteThread[0])
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.message) return console.log(data.message);
+        console.log(allThreads);
+        const index = allThreads.findIndex(thread => thread.id === id);
+        allThreads.splice(index, 1);
+        this.setState({ threads: allThreads });
+      })
+      .catch(err => console.log(err));
   }
   render() {
     return (
@@ -30,9 +53,15 @@ class Thread extends Component {
               this.state.threads.map(thread => 
                 <li key={thread.id}>
                   <Link to={`/thread/comment/${thread.id}`}>
-                    {thread.title}
+                    タイトル: {thread.title}<br/>
+                    説明: {thread.description}<br />
+                    最終更新日: {moment(thread.updated_date).format('YYYY-MM-DD')}<br />
+                    作成日: {moment(thread.created_date).format('YYYY-MM-DD')}<br />
+                    いいね: {thread.good}<br />
+                    ユーザID: {thread.user_id}<br />
                   </Link>
                   <button onClick={this.editPage.bind(this, thread.id)}>編集</button>
+                  <button onClick={this.handleDeleteThread.bind(this, thread.id)}>削除</button>
                 </li>
               )
             }
