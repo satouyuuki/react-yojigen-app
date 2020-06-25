@@ -24,6 +24,7 @@ class Login extends Component {
       this.state.email === '' ||
       this.state.password === ''
     ) return;
+    console.log(this.state);
     fetch('http://localhost:3000/login', {
       method: 'post',
       headers: {

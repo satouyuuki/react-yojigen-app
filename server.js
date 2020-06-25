@@ -5,6 +5,7 @@ const cors = require('cors');
 const port = process.env.PORT || 3000;
 const pool = require('./db');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 // middleware
 app.use(cors());
@@ -31,19 +32,15 @@ async function getCurrentUserId(email) {
 
 app.post('/login', async (req, res) => {
   try {
-    const allUsers = await pool.query("select * from users");
-    const { email, password } = req.body;
-
-    const currentUser = allUsers.rows.filter(user => user.email === email);
-    if (currentUser.length > 0) {
-      if (currentUser[0].password === password) {
-        const accessToken = jwt.sign(email, process.env.ACCESS_TOKEN_SECRET);
-        res.send({ accessToken: accessToken });
-      } else {
-        res.send({message: "passwordが一致しません"})
-      }
+    console.log(req.body);
+    const user = await pool.query('select * from users where email = $1', [req.body.email]);
+    if (typeof user.rows[0] == 'undefined') return res.status(400).send({ message: "メールアドレスが見つかりません" });
+    console.log('start');
+    if (await bcrypt.compare(req.body.password, user.password)) {
+      const accessToken = jwt.sign(user.name, process.env.ACCESS_TOKEN_SECRET);
+      res.send({ accessToken: accessToken });
     } else {
-      res.send({message: "メールアドレスが見つかりません"})
+      res.send({ message: "passwordが一致しません"})
     }
   } catch (err) {
     console.log(err.message);
@@ -110,13 +107,18 @@ app.post('/comment', authenticateToken, async (req, res) => {
 // create a user
 app.post('/user', async (req, res) => {
   try {
-    const body = req.body;
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const user = {
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword,
+    }
     const newBody = await pool.query(
       "insert into users (name, email, password) values ($1, $2, $3) RETURNING *",
       [
-        body.name,
-        body.email,
-        body.password,
+        user.name,
+        user.email,
+        user.password,
       ]
     );
     res.json(newBody.rows[0]);
