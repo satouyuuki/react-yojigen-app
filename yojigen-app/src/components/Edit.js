@@ -12,17 +12,21 @@ class Edit extends Component {
   }
   componentDidMount() {
     const id = this.props.match.params.id;
-    console.log(id);
     fetch(`/thread/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        this.setState({
-          title: data.title,
-          description: data.description,
-          userId: data.user_id
-        })
-      })
-      .catch(err => console.log(err));
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      this.setState({
+        title: data.title,
+      });
+      this.setState({
+        description: data.description,
+      });
+      this.setState({
+        userId: data.user_id
+      });
+    })
+    .catch(err => console.log(err));
   }
   handleTitleVal(e) {
     this.setState({
