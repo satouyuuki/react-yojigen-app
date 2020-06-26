@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 const path = require('path');
 
 // middleware
-app.use(cors());
+// app.use(cors());
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
