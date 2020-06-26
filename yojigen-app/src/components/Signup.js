@@ -31,7 +31,7 @@ class Signup extends Component {
       this.state.email === '' ||
       this.state.password === ''
     ) return;
-    fetch('http://localhost:3000/user', {
+    fetch('/user', {
       method: 'post',
       headers: {
         "Content-type": 'application/json'

@@ -32,7 +32,7 @@ class Create extends Component {
       updated_date: new Date()
     }
     const token = "Bearer " + localStorage.getItem('token');
-    fetch('http://localhost:3000/thread', {
+    fetch('/thread', {
       method: 'post',
       headers: {
         "Content-type": 'application/json',

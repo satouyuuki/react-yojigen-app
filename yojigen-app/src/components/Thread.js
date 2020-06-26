@@ -9,7 +9,7 @@ class Thread extends Component {
     }
   }
   componentDidMount() {
-    fetch('http://localhost:3000/thread')
+    fetch('/thread')
       .then(res => res.json())
       .then(data => {
         console.log(data);
@@ -26,7 +26,7 @@ class Thread extends Component {
     const token = "Bearer " + localStorage.getItem('token');
     const allThreads = this.state.threads;
     const deleteThread = allThreads.filter(thread => thread.id === id);
-    fetch(`http://localhost:3000/thread/${id}`, {
+    fetch(`/thread/${id}`, {
       method: 'delete',
       headers: {
         "Content-type": 'application/json',
