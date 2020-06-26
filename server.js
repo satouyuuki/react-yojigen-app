@@ -34,12 +34,11 @@ async function getCurrentUserId(email) {
 
 app.post('/login', async (req, res) => {
   try {
-    console.log(req.body);
     const user = await pool.query('select * from users where email = $1', [req.body.email]);
     if (typeof user.rows[0] == 'undefined') return res.status(400).send({ message: "メールアドレスが見つかりません" });
-    console.log('start');
-    if (await bcrypt.compare(req.body.password, user.password)) {
-      const accessToken = jwt.sign(user.name, process.env.ACCESS_TOKEN_SECRET);
+    if (await bcrypt.compare(req.body.password, user.rows[0].password)) {
+
+      const accessToken = jwt.sign(user.rows[0].email, process.env.ACCESS_TOKEN_SECRET);
       res.send({ accessToken: accessToken });
     } else {
       res.send({ message: "passwordが一致しません"})
@@ -71,7 +70,7 @@ function authenticateToken(req, res, next) {
 app.post('/thread', authenticateToken, async (req, res) => {
   try {
     const body = req.body;
-    const {id} = await getCurrentUserId(req.user);
+    const { id } = await getCurrentUserId(req.user);
     const newBody = await pool.query(
       "insert into threads (title, description, user_id) values ($1, $2, $3) RETURNING *",
       [
@@ -90,7 +89,6 @@ app.post('/thread', authenticateToken, async (req, res) => {
 app.post('/comment', authenticateToken, async (req, res) => {
   try {
     const { id } = await getCurrentUserId(req.user);
-    console.log(id);
     const body = req.body;
     const newBody = await pool.query(
       "insert into comments (comment, thread_id, user_id) values ($1, $2, $3) RETURNING *",
@@ -161,7 +159,42 @@ app.get('/user', async (req, res) => {
 });
 
 // get a thread
+app.get('/thread/comments/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const threadQuery = {
+      text: `select 
+  threads.*,
+  coalesce (json_agg(comments), '[]'::json) as comments
+from threads
+  left outer join comments on threads.id = comments.thread_id
+where threads.id = $1
+GROUP BY threads.id;`,
+      params: [id]
+    }
+    const allThread = await pool.query(threadQuery.text, threadQuery.params);
+    res.json(allThread.rows);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+// get a thread
 app.get('/thread/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const threadQuery = {
+      text: "select * from threads where id = $1",
+      params: [id]
+    }
+    const allThread = await pool.query(threadQuery.text, threadQuery.params);
+    res.json(allThread.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+// get a thread and comments
+app.get('/thread/comments/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const threadQuery = {
@@ -266,8 +299,6 @@ app.put('/comment/:id', authenticateToken, async (req, res) => {
 app.delete('/thread/:id', authenticateToken, async (req, res) => {
   try {
     const userId = await getCurrentUserId(req.user);
-    console.log(userId.id);
-    console.log(req.body.user_id);
     if (userId.id !== req.body.user_id) {
       return res.send({ message: "削除できません" })
     } else {
@@ -286,8 +317,6 @@ app.delete('/thread/:id', authenticateToken, async (req, res) => {
 app.delete('/comment/:id', authenticateToken, async (req, res) => {
   try {
     const userId = await getCurrentUserId(req.user);
-    console.log(userId.id);
-    console.log(req.body.user_id);
     if (userId.id !== req.body.user_id) {
       return res.send({ message: "削除できません" })
     } else {

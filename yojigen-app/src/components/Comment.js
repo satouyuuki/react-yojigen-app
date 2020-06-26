@@ -12,10 +12,9 @@ class Comment extends Component {
   }
   componentDidMount() {
     const id = this.props.match.params.id;
-    fetch(`/thread/${id}`)
+    fetch(`/thread/comments/${id}`)
       .then(res => res.json())
       .then(data => {
-        // console.log(data[0].comments[0]);
         this.setState({
           threads: data[0],
         })
@@ -27,7 +26,6 @@ class Comment extends Component {
         this.setState({
           comments: initComments
         })
-        console.log(this.state.comments);
       })
       .catch(err => console.log(err));
   }
@@ -55,7 +53,6 @@ class Comment extends Component {
   handleEditCommentSubmit(id, e) {
     let updateComment = this.state.comments;
     updateComment = updateComment.filter(comment => comment.id === id);
-    console.log(updateComment);
     if (
       updateComment[0].comment === ''
     ) return;
@@ -90,7 +87,6 @@ class Comment extends Component {
   handleDeleteCommentSubmit(id, e) {
     let deleteComment = this.state.comments;
     deleteComment = deleteComment.filter(comment => comment.id === id);
-    console.log(deleteComment);
     const token = "Bearer " + localStorage.getItem('token');
     const submitBody = {
       user_id: deleteComment[0].user_id,
@@ -110,9 +106,7 @@ class Comment extends Component {
         if (data.message) return console.log(data.message);
         const newComment = this.state.comments;
         const index = newComment.findIndex(comment => comment.id === data.id);
-        console.log(index);
         newComment.splice(index, 1);
-        console.log(newComment);
         this.setState({
           comments: newComment
         })
@@ -149,9 +143,8 @@ class Comment extends Component {
         this.setState({
           comments: newComment
         })
-        this.setState({
-          comment: ''
-        })
+        alert('コメントを挿入しました');
+        this.setState({ comment: '' });
       })
       .catch(err => console.log(err));
     e.preventDefault();

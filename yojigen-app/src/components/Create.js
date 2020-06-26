@@ -28,8 +28,6 @@ class Create extends Component {
     const newThread = {
       title: this.state.title,
       description: this.state.description,
-      created_date: new Date(),
-      updated_date: new Date()
     }
     const token = "Bearer " + localStorage.getItem('token');
     fetch('/thread', {
@@ -43,7 +41,9 @@ class Create extends Component {
       .then(res => res.json())
       .then(data => {
         console.log(data);
-        this.props.history.push('/');
+        // this.props.history.push('/');
+        this.setState({ title: '' });
+        this.setState({ description: '' });
       })
       .catch(err => console.log(err));
     e.preventDefault();
