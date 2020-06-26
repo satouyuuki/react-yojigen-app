@@ -13,7 +13,7 @@ class Edit extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
     console.log(id);
-    fetch(`http://localhost:3000/thread/${id}`)
+    fetch(`/thread/${id}`)
       .then(res => res.json())
       .then(data => {
         this.setState({
@@ -48,7 +48,7 @@ class Edit extends Component {
     }
     const id = this.props.match.params.id;
     const token = "Bearer " + localStorage.getItem('token');
-    fetch(`http://localhost:3000/thread/${id}`, {
+    fetch(`/thread/${id}`, {
       method: 'put',
       headers: {
         "Content-type": 'application/json',
