@@ -47,26 +47,32 @@ class Login extends Component {
   }
   render() {
     return (
-      <div>
-        <h1>ログイン</h1>
-        <form onSubmit={this.handleSubmit.bind(this)}>
-          <div>
-            <label>Email:</label>
-            <input
-              type="email"
-              onChange={this.handleEmailVal.bind(this)}
-            />
-          </div>
-          <div>
-            <label>Password:</label>
-            <input
-              type="passowrd"
-              onChange={this.handlePassVal.bind(this)}
-            />
-          </div>
-          <input type="submit" value="送信" />
-        </form>
-        <Link to="/signup">新規登録はこちら</Link>
+      <div className="container">
+        <div className="login-card">
+          <h1 className="heading1">ログイン</h1>
+          <form onSubmit={this.handleSubmit.bind(this)}>
+            <div className="input-wrap">
+              <input
+                className="input-form"
+                type="email"
+                placeholder="Email"
+                onChange={this.handleEmailVal.bind(this)}
+              />
+            </div>
+            <div className="input-wrap">
+              <input
+                className="input-form"
+                type="passowrd"
+                placeholder="Password"
+                onChange={this.handlePassVal.bind(this)}
+              />
+            </div>
+            <div className="input-wrap">
+              <input className="button" type="submit" value="送信" />
+            </div>
+          </form>
+          <Link className="card-link" to="/signup">新規登録はこちら</Link>
+        </div>
       </div>
     )
   }

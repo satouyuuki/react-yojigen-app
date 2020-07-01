@@ -51,33 +51,38 @@ class Signup extends Component {
   }
   render() {
     return (
-      <div>
-        <h1>新規登録</h1>
+      <div className="login-card">
+        <h1 className="heading1">新規登録</h1>
         <form onSubmit={this.handleSubmit.bind(this)}>
-          <div>
-            <label>Name:</label>
+          <div className="input-wrap">
             <input
+              className="input-form"
               type="text"
+              placeholder="Name"
               onChange={this.handleNameVal.bind(this)}
             />
           </div>
-          <div>
-            <label>Email:</label>
+          <div className="input-wrap">
             <input
               type="email"
+              className="input-form"
+              placeholder="Email"
               onChange={this.handleEmailVal.bind(this)}
             />
           </div>
-          <div>
-            <label>Password:</label>
+          <div className="input-wrap">
             <input
               type="passowrd"
+              className="input-form"
+              placeholder="Password"
               onChange={this.handlePassVal.bind(this)}
             />
           </div>
-          <input type="submit" value="送信"/>
+          <div className="input-wrap">
+            <input className="button" type="submit" value="送信"/>
+          </div>
         </form>
-        <Link to="/login">ログインはこちら</Link>
+        <Link className="card-link" to="/login">ログインはこちら</Link>
       </div>
     )
   }

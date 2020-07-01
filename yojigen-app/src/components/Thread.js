@@ -55,8 +55,8 @@ class Thread extends Component {
                   <Link to={`/thread/comment/${thread.id}`}>
                     タイトル: {thread.title}<br/>
                     説明: {thread.description}<br />
-                    最終更新日: {moment(thread.updated_date).format('YYYY-MM-DD')}<br />
-                    作成日: {moment(thread.created_date).format('YYYY-MM-DD')}<br />
+                    最終更新日: {moment(thread.updated_date).format('YYYY/MM/DD h:mm')}<br />
+                    作成日: {moment(thread.created_date).format('YYYY/MM/DD h:mm')}<br />
                     いいね: {thread.good}<br />
                     ユーザID: {thread.user_id}<br />
                   </Link>

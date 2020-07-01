@@ -1,0 +1,75 @@
+/**
+* @color
+**/
+$white: #ffffff;
+$black: #000000;
+
+$text: #111;
+$base: #f4f4f4;
+$link: #2a3644;
+$button: #f26964;
+$bottom: #ab4b47;
+
+.container {
+  // margin: 0 auto;
+}
+
+.login-card {
+  width: 90%;
+  max-width: 500px;
+  background-color: $link;
+  padding: 30px 20px;
+  margin: 0 auto;
+}
+
+.card-link {
+  color: $white;
+}
+
+.heading1 {
+  color: $base;
+  text-align: center;
+}
+
+.input-wrap {
+  margin-bottom: 10px;
+}
+
+.input-form {
+  // appearance: none;
+  background-color: $text;
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px;
+  color: $base;
+
+  &:hover {
+    background-color: rgba($text, .6);
+  }
+  &::placeholder {
+    color: rgba($white, .4);
+  }
+}
+.button {
+  background-color: $button;
+  border-radius: 6px;
+  border: 0;
+  box-shadow: 0px 4px 0px $bottom;
+  color: $base;
+  width: 100%;
+  height: 35px;
+  font-size: 18px;
+  font-weight: bold;
+  &:focus {
+    outline: none;
+  }
+  &:active {
+    position: relative;
+    top: 4px;
+    box-shadow: none;
+  }
+}
+

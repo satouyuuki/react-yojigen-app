@@ -3,12 +3,13 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import GuestRoute from './components/GuestRoute';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import './App.css';
+// import './App.css';
 import Header from './components/Header';
 import Create from './components/Create';
 import Edit from './components/Edit';
 import Comment from './components/Comment';
 import Thread from './components/Thread';
+import './styles/imports.scss';
 
 class App extends Component {
   constructor(props) {
