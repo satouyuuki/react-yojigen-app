@@ -160,10 +160,10 @@ class Comment extends Component {
             {this.state.threads.description}
           </p>
           <p>
-            作成日: {moment(this.state.threads.created_date).format('YYYY-MM-DD')}
+            作成日: {moment(this.state.threads.created_date).format('YYYY/MM/DD h:mm')}
           </p>
           <p>
-            最終更新日: {moment(this.state.threads.updated_date).format('YYYY-MM-DD')}
+            最終更新日: {moment(this.state.threads.updated_date).format('YYYY/MM/DD h:mm')}
           </p>
         </div>
         <ul>
@@ -181,8 +181,8 @@ class Comment extends Component {
                   :
                   <p>{ comment.comment }</p>
                 }
-              作成日: {moment(comment.created_date).format('YYYY-MM-DD')}<br />
-              更新日: {moment(comment.updated_date).format('YYYY-MM-DD')}<br />
+              作成日: {moment(comment.created_date).format('YYYY/MM/DD h:mm')}<br />
+              更新日: {moment(comment.updated_date).format('YYYY/MM/DD h:mm')}<br />
               ユーザID: {comment.user_id}<br />
               記事iD: {comment.thread_id}<br />
                 {comment.editFlg}
