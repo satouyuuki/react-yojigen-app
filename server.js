@@ -28,6 +28,14 @@ async function getCurrentUserId(email) {
   return currentId.rows[0];
 }
 
+// find user and get user name
+async function getCurrentUserName(email) {
+   const currentId = await pool.query(
+    "select name from users where email = $1",[email]
+   );
+  return currentId.rows[0];
+}
+
 // app.get('/posts', authenticateToken, (req, res) => {
 //   res.json(posts.filter(post => post.name === req.user.name));
 // })
@@ -214,12 +222,18 @@ GROUP BY threads.id;`,
   }
 });
 
-// get a user
-app.get('/user/:id', async (req, res) => {
+// get a user name
+app.get('/user-name', authenticateToken, async (req, res) => {
   try {
-    const id = req.params.id;
-    const allThread = await pool.query("select * from users WHERE id = $1", [id]);
-    res.json(allThread.rows[0]);
+    const userName = await getCurrentUserName(req.user);
+    console.log(userName);
+    res.send({
+      name: userName.name
+    });
+    // const allThread = await pool.query(threadQuery.text, threadQuery.params);
+    // const id = req.params.id;
+    // const allThread = await pool.query("select * from users WHERE id = $1", [id]);
+    // res.json(allThread.rows[0]);
   } catch (err) {
     console.log(err.message);
   }

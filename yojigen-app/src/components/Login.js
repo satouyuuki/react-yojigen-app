@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 class Login extends Component {
   constructor(props) {
@@ -8,6 +8,8 @@ class Login extends Component {
       email: '',
       password: ''
     }
+    console.log('login');
+    console.log(this.props);
   }
   handleEmailVal(e) {
     this.setState({
@@ -38,32 +40,36 @@ class Login extends Component {
         localStorage.setItem('token', data.accessToken);
         this.setState({ email: '' });
         this.setState({ password: '' });
-        // this.props.history.push('/');
+        this.props.history.push('/');
       })
       .catch(err => console.log(err));
     e.preventDefault();
   }
   render() {
     return (
-      <form onSubmit={this.handleSubmit.bind(this)}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            onChange={this.handleEmailVal.bind(this)}
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="passowrd"
-            onChange={this.handlePassVal.bind(this)}
-          />
-        </div>
-        <input type="submit" value="送信" />
-      </form>
+      <div>
+        <h1>ログイン</h1>
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <div>
+            <label>Email:</label>
+            <input
+              type="email"
+              onChange={this.handleEmailVal.bind(this)}
+            />
+          </div>
+          <div>
+            <label>Password:</label>
+            <input
+              type="passowrd"
+              onChange={this.handlePassVal.bind(this)}
+            />
+          </div>
+          <input type="submit" value="送信" />
+        </form>
+        <Link to="/signup">新規登録はこちら</Link>
+      </div>
     )
   }
 }
 
-export default Login;
+export default withRouter(Login);
