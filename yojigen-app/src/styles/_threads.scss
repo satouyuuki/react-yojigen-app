@@ -1,0 +1,22 @@
+.thre-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+.thre-card {
+  width: 300px;
+  border-left: 1px solid $light-grey;
+  border-right: 1px solid $light-grey;
+  border-top: 5px solid $skyblue;
+  border-bottom: 5px solid $skyblue;
+  padding: 0 5px;
+  &__title {
+    font-size: 1.8rem;
+  }
+  
+  &__text {
+    font-size: 1.4rem;
+  }
+  &__info {
+    
+  }
+}

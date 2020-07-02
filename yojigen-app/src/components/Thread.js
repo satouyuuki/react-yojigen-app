@@ -48,18 +48,19 @@ class Thread extends Component {
     return (
       <div>
         <Link to="/thread/create">記事作成</Link>
-        <ul>
+        <ul className="thre-group">
             {
               this.state.threads.map(thread => 
-                <li key={thread.id}>
+                <li className="thre-card" key={thread.id}>
                   <Link to={`/thread/comment/${thread.id}`}>
-                    タイトル: {thread.title}<br/>
-                    説明: {thread.description}<br />
-                    最終更新日: {moment(thread.updated_date).format('YYYY/MM/DD h:mm')}<br />
-                    作成日: {moment(thread.created_date).format('YYYY/MM/DD h:mm')}<br />
-                    いいね: {thread.good}<br />
-                    ユーザID: {thread.user_id}<br />
+                    <p className="thre-card__title">タイトル: {thread.title}</p>
                   </Link>
+                  <p className="thre-card__text">説明: {thread.description}</p><br />
+                  最終更新日: {moment(thread.updated_date).format('YYYY/MM/DD h:mm')}<br />
+                  作成日: {moment(thread.created_date).format('YYYY/MM/DD h:mm')}<br />
+                  いいね: {thread.good}<br />
+                  ユーザID: {thread.user_id}<br />
+                  
                   <button onClick={this.editPage.bind(this, thread.id)}>編集</button>
                   <button onClick={this.handleDeleteThread.bind(this, thread.id)}>削除</button>
                 </li>
