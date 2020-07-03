@@ -40,7 +40,6 @@ class Signup extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         this.setState({ name: '' });
         this.setState({ email: '' });
         this.setState({ password: '' });

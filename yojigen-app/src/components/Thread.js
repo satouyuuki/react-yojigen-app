@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment'
+import { AiFillHeart } from "react-icons/ai";
 class Thread extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +13,6 @@ class Thread extends Component {
     fetch('/thread')
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         this.setState({
           threads: data
         })
@@ -21,6 +21,61 @@ class Thread extends Component {
   }
   editPage(id) {
     this.props.history.push(`/thread/edit/${id}`);
+  }
+  handleLike(threadId) {
+    if (!localStorage.getItem('token')) return alert('ログインしてください');
+    const token = "Bearer " + localStorage.getItem('token');
+    const userId = this.props.userId;
+    const allThreads = this.state.threads;
+    fetch(`/like`, {
+      method: 'post',
+      headers: {
+        "Content-type": 'application/json',
+      },
+      body: JSON.stringify({ threadId, userId })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.length) {
+          fetch(`/thread/like/${data[0].id}`, {
+            method: 'delete',
+          })
+            .then(res => res.json())
+            .then(data => {
+              allThreads.map(thread => {
+                if (thread.id === data.thread_id) {
+                  thread.like--;
+                }
+              })
+              this.setState({
+                threads: allThreads
+              });
+            })
+            .catch(err => console.log(err));
+        } else {
+          fetch('/thread/like', {
+            method: 'post',
+            headers: {
+              "Content-type": 'application/json',
+              "Authorization": token
+            },
+            body: JSON.stringify({ threadId })
+          })
+            .then(res => res.json())
+            .then(data => {
+              allThreads.map(thread => {
+                if (thread.id === data.thread_id) {
+                  thread.like++;
+                }
+              })
+              this.setState({
+                threads: allThreads
+              });
+            })
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err => console.log(err));
   }
   handleDeleteThread(id) {
     const token = "Bearer " + localStorage.getItem('token');
@@ -37,7 +92,6 @@ class Thread extends Component {
       .then(res => res.json())
       .then(data => {
         if (data.message) return console.log(data.message);
-        console.log(allThreads);
         const index = allThreads.findIndex(thread => thread.id === id);
         allThreads.splice(index, 1);
         this.setState({ threads: allThreads });
@@ -47,21 +101,31 @@ class Thread extends Component {
   render() {
     return (
       <div>
-        <Link to="/thread/create">記事作成</Link>
-        <ul>
+        {
+          this.props.userId !== 0 &&
+          <Link to="/thread/create">記事作成</Link>
+        }
+        <ul className="thre-group">
             {
               this.state.threads.map(thread => 
-                <li key={thread.id}>
+                <li className="thre-card" key={thread.id}>
                   <Link to={`/thread/comment/${thread.id}`}>
-                    タイトル: {thread.title}<br/>
-                    説明: {thread.description}<br />
-                    最終更新日: {moment(thread.updated_date).format('YYYY/MM/DD h:mm')}<br />
-                    作成日: {moment(thread.created_date).format('YYYY/MM/DD h:mm')}<br />
-                    いいね: {thread.good}<br />
-                    ユーザID: {thread.user_id}<br />
+                    <p className="thre-card__title">タイトル: {thread.title}</p>
                   </Link>
-                  <button onClick={this.editPage.bind(this, thread.id)}>編集</button>
-                  <button onClick={this.handleDeleteThread.bind(this, thread.id)}>削除</button>
+                  最終更新日: {moment(thread.updated_date).format('YYYY/MM/DD h:mm')}<br />
+                  作成日: {moment(thread.created_date).format('YYYY/MM/DD h:mm')}<br />
+                  <AiFillHeart
+                    onClick={this.handleLike.bind(this, thread.id)}
+                    className="i-heart"
+                  />: {thread.like}<br />
+                  ユーザID: {thread.user_id}<br />
+                  {
+                    this.props.userId === thread.user_id &&
+                    <div>
+                      <button onClick={this.editPage.bind(this, thread.id)}>編集</button>
+                      <button onClick={this.handleDeleteThread.bind(this, thread.id)}>削除</button>
+                    </div>
+                  }
                 </li>
               )
             }

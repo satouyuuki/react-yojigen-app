@@ -72,7 +72,6 @@ class Comment extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         const newComment = this.state.comments;
         const index = newComment.findIndex(comment => comment.id === data.id);
         newComment[index] = data;
@@ -102,7 +101,6 @@ class Comment extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         if (data.message) return console.log(data.message);
         const newComment = this.state.comments;
         const index = newComment.findIndex(comment => comment.id === data.id);
@@ -136,7 +134,6 @@ class Comment extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         if (data.message) return console.log(data.message);
         const newComment = this.state.comments;
         newComment.push(data);
@@ -154,54 +151,72 @@ class Comment extends Component {
     return (
       <div>
         <Link to="/">戻る</Link>
-        <div>
-          <h3>{this.state.threads.title}</h3>
-          <p>
-            {this.state.threads.description}
-          </p>
-          <p>
-            作成日: {moment(this.state.threads.created_date).format('YYYY/MM/DD h:mm')}
-          </p>
-          <p>
-            最終更新日: {moment(this.state.threads.updated_date).format('YYYY/MM/DD h:mm')}
-          </p>
-        </div>
-        <ul>
-          {
-            this.state.comments.map(comment =>
-              <li key={comment.id}>
-                {comment.editFlg === true ?
-                  <div>
-                    <input
-                    value={comment.comment}
-                    onChange={this.handleUpdateComment.bind(this, comment.id)}
-                  />
-                    <button onClick={this.handleEditCommentSubmit.bind(this, comment.id)}>編集</button>
-                  </div>
-                  :
-                  <p>{ comment.comment }</p>
-                }
-              作成日: {moment(comment.created_date).format('YYYY/MM/DD h:mm')}<br />
-              更新日: {moment(comment.updated_date).format('YYYY/MM/DD h:mm')}<br />
-              ユーザID: {comment.user_id}<br />
-              記事iD: {comment.thread_id}<br />
-                {comment.editFlg}
-                <button onClick={this.handleToggleEditFlg.bind(this, comment.id)}>編集</button>
-                <button onClick={this.handleDeleteCommentSubmit.bind(this, comment.id)}>削除</button>
-              </li>
-            )
-          }
-        </ul>
-        <form onSubmit={this.handleSubmit.bind(this)}>
-          <div>
-            <label>Comment:</label>
-            <input
-              type="text"
-              onChange={this.handleCommentVal.bind(this)}
-            />
+        <div className="msg-area">
+          <div className="msg-area__head">
+            <h3>{this.state.threads.title}</h3>
           </div>
-          <input type="submit" value="送信" />
-        </form>
+          <div className="msg-area__content">
+            <div className="scroll-area">
+              <p className="comment left">
+                {this.state.threads.description}
+              </p>
+              <p>
+                作成日: {moment(this.state.threads.created_date).format('YYYY/MM/DD h:mm')}
+              </p>
+              <p>
+                最終更新日: {moment(this.state.threads.updated_date).format('YYYY/MM/DD h:mm')}
+              </p>
+
+              <ul>
+                {
+                  this.state.comments.map(comment =>
+                    <li
+                      key={comment.id}
+                      className={(this.state.threads.user_id === comment.user_id ? 'left' : 'right')}
+                    >
+                      {comment.editFlg === true ?
+                        <div>
+                          <input
+                          value={comment.comment}
+                          onChange={this.handleUpdateComment.bind(this, comment.id)}
+                        />
+                          <button onClick={this.handleEditCommentSubmit.bind(this, comment.id)}>編集</button>
+                        </div>
+                        :
+                        <p className={'comment' + ' ' + (this.state.threads.user_id === comment.user_id ? 'left' : 'right')}>{ comment.comment }</p>
+                      }
+                    作成日: {moment(comment.created_date).format('YYYY/MM/DD h:mm')}<br />
+                    更新日: {moment(comment.updated_date).format('YYYY/MM/DD h:mm')}<br />
+                    ユーザID: {comment.user_id}<br />
+                    記事iD: {comment.thread_id}<br />
+                      {
+                        this.props.userId === comment.user_id &&
+                        <div>
+                          <button onClick={this.handleToggleEditFlg.bind(this, comment.id)}>編集</button>
+                          <button onClick={this.handleDeleteCommentSubmit.bind(this, comment.id)}>削除</button>
+                        </div>
+                      }
+                    </li>
+                  )
+                }
+              </ul>
+
+            </div>
+          </div>
+          <div className="msg-area__bottom">
+            <form onSubmit={this.handleSubmit.bind(this)}>
+              <div className="cmt-group">
+                <textarea
+                  className="cmt-textarea"
+                  placeholder="コメントを送信してください"
+                  onChange={this.handleCommentVal.bind(this)}
+                />
+                <input className="cmt-buttom" type="submit" value="送信" />
+              </div>
+
+            </form>
+          </div>
+        </div>
       </div>
     )
   }

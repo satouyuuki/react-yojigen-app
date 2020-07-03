@@ -40,7 +40,6 @@ class Create extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         // this.props.history.push('/');
         this.setState({ title: '' });
         this.setState({ description: '' });
@@ -53,21 +52,36 @@ class Create extends Component {
     return (
       <form onSubmit={this.handleSubmit.bind(this)}>
         <Link to="/">戻る</Link>
-        <div>
-          <label>Title:</label>
-          <input
-            type="text"
-            onChange={this.handleTitleVal.bind(this)}
-          />
+        <div className="table">
+          <div className="table__row">
+            <div className="table__head">
+              <label>タイトル:</label>
+            </div>
+            <div className="table__body">
+              <input
+                className="table-input"
+                placeholder="タイトル"
+                type="text"
+                onChange={this.handleTitleVal.bind(this)}
+              />
+            </div>
+          </div>
+          <div className="table__row">
+            <div className="table__head">
+              <label>説明文:</label>
+            </div>
+            <div className="table__body">
+              <textarea
+                className="table-textarea"
+                placeholder="説明文"
+                onChange={this.handleDescVal.bind(this)}
+              />
+            </div>
+          </div>
+          <div className="table__full">
+            <input className="button" type="submit" value="送信" />
+          </div>
         </div>
-        <div>
-          <label>Description:</label>
-          <input
-            type="text"
-            onChange={this.handleDescVal.bind(this)}
-          />
-        </div>
-        <input type="submit" value="送信" />
       </form>
     )
   }
