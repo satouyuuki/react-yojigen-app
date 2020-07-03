@@ -31,7 +31,7 @@ async function getCurrentUserId(email) {
 // find user and get user name
 async function getCurrentUserName(email) {
    const currentId = await pool.query(
-    "select name from users where email = $1",[email]
+    "select name , id from users where email = $1",[email]
    );
   return currentId.rows[0];
 }
@@ -73,6 +73,26 @@ function authenticateToken(req, res, next) {
 
 // ROUTES //
 
+// post like thread
+app.post('/thread/like', authenticateToken, async (req, res) => {
+  try {
+    console.log('start');
+    const { id } = await getCurrentUserId(req.user);
+    console.log(id);
+    console.log(req.body);
+      
+    const newBody = await pool.query(
+      "insert into likes (user_id, thread_id) values ($1, $2) RETURNING *",
+      [
+        id,
+        req.body.threadId,
+      ]
+    );
+    res.json(newBody.rows[0]);
+  } catch (err) {
+    console.log(err.message);
+  }
+})
 
 // create a thread
 app.post('/thread', authenticateToken, async (req, res) => {
@@ -138,8 +158,52 @@ app.post('/user', async (req, res) => {
 // get all threads
 app.get('/thread', async (req, res) => {
   try {
-    const allThread = await pool.query("select * from threads");
+    const query = `
+      select threads.*, COUNT(likes.id) AS like
+      from threads 
+      join likes 
+      on threads.id = likes.thread_id
+      group by threads.id;
+    `;
+    const allThread = await pool.query(query);
     res.json(allThread.rows);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+// get user like
+app.post('/like', async (req, res) => {
+  try {
+    const query = {
+      text: `
+      select id from likes where user_id = $1 and thread_id = $2;
+    `,
+      params: [
+        req.body.userId,
+        req.body.threadId,
+      ]
+    }
+    const allThread = await pool.query(query.text, query.params);
+    res.json(allThread.rows);
+  } catch (err) {
+    console.log(err.message);
+  }
+});
+
+// delete  like
+app.delete('/thread/like/:id', async (req, res) => {
+  try {
+    const query = {
+      text: `
+      delete from likes where id = $1 RETURNING *;
+    `,
+      params: [
+        req.params.id
+      ]
+    }
+    const allThread = await pool.query(query.text, query.params);
+    res.json(allThread.rows[0]);
   } catch (err) {
     console.log(err.message);
   }
@@ -228,7 +292,8 @@ app.get('/user-name', authenticateToken, async (req, res) => {
     const userName = await getCurrentUserName(req.user);
     console.log(userName);
     res.send({
-      name: userName.name
+      name: userName.name,
+      id: userName.id,
     });
     // const allThread = await pool.query(threadQuery.text, threadQuery.params);
     // const id = req.params.id;

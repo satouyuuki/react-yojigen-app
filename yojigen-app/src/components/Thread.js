@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment'
+import { AiFillHeart } from "react-icons/ai";
 class Thread extends Component {
   constructor(props) {
     super(props);
@@ -13,6 +14,7 @@ class Thread extends Component {
       .then(res => res.json())
       .then(data => {
         console.log(data);
+        console.log(this.props);
         this.setState({
           threads: data
         })
@@ -21,6 +23,66 @@ class Thread extends Component {
   }
   editPage(id) {
     this.props.history.push(`/thread/edit/${id}`);
+  }
+  handleLike(threadId) {
+    if (!localStorage.getItem('token')) return alert('ログインしてください');
+    const token = "Bearer " + localStorage.getItem('token');
+    const userId = this.props.userId;
+    const allThreads = this.state.threads;
+    console.log( allThreads );
+    
+    fetch(`/like`, {
+      method: 'post',
+      headers: {
+        "Content-type": 'application/json',
+      },
+      body: JSON.stringify({ threadId, userId })
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        if (data.length) {
+          fetch(`/thread/like/${data[0].id}`, {
+            method: 'delete',
+          })
+            .then(res => res.json())
+            .then(data => {
+              console.log(data);
+              allThreads.map(thread => {
+                if (thread.id === data.thread_id) {
+                  thread.like--;
+                }
+              })
+              this.setState({
+                threads: allThreads
+              });
+            })
+            .catch(err => console.log(err));
+        } else {
+          fetch('/thread/like', {
+            method: 'post',
+            headers: {
+              "Content-type": 'application/json',
+              "Authorization": token
+            },
+            body: JSON.stringify({ threadId })
+          })
+            .then(res => res.json())
+            .then(data => {
+              console.log(data);
+              allThreads.map(thread => {
+                if (thread.id === data.thread_id) {
+                  thread.like++;
+                }
+              })
+              this.setState({
+                threads: allThreads
+              });
+            })
+            .catch(err => console.log(err));
+        }
+      })
+      .catch(err => console.log(err));
   }
   handleDeleteThread(id) {
     const token = "Bearer " + localStorage.getItem('token');
@@ -58,7 +120,10 @@ class Thread extends Component {
                   <p className="thre-card__text">説明: {thread.description}</p><br />
                   最終更新日: {moment(thread.updated_date).format('YYYY/MM/DD h:mm')}<br />
                   作成日: {moment(thread.created_date).format('YYYY/MM/DD h:mm')}<br />
-                  いいね: {thread.good}<br />
+                  <AiFillHeart
+                    onClick={this.handleLike.bind(this, thread.id)}
+                    className="i-heart"
+                  />: {thread.like}<br />
                   ユーザID: {thread.user_id}<br />
                   
                   <button onClick={this.editPage.bind(this, thread.id)}>編集</button>

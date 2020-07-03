@@ -27,8 +27,9 @@ class Header extends Component {
     })
       .then(res => res.json())
       .then((data) => {
+        console.log(data);
         // UserStatus.auth = true;
-        this.props.updateState(data.name);
+        this.props.updateState(data);
         // this.setState({
         //   name: data.name
         // })
@@ -39,14 +40,14 @@ class Header extends Component {
     localStorage.removeItem('token');
     alert('ログアウトしました');
     console.log(this.props);
-    this.props.updateState('テスト太郎');
+    this.props.updateState({name: '', id: 0});
     this.props.history.push('/login');
   }
   render() {
     return (
       <div>
         <Link to="/">スレッド一覧</Link>
-        {this.props.name != 'テスト太郎'
+        {this.props.name != ''
           ? 
           <div>
             <button onClick={this.handleLogout.bind(this)}>Log Out</button>
