@@ -13,8 +13,6 @@ class Thread extends Component {
     fetch('/thread')
       .then(res => res.json())
       .then(data => {
-        console.log(data);
-        console.log(this.props);
         this.setState({
           threads: data
         })
@@ -29,8 +27,6 @@ class Thread extends Component {
     const token = "Bearer " + localStorage.getItem('token');
     const userId = this.props.userId;
     const allThreads = this.state.threads;
-    console.log( allThreads );
-    
     fetch(`/like`, {
       method: 'post',
       headers: {
@@ -40,14 +36,12 @@ class Thread extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         if (data.length) {
           fetch(`/thread/like/${data[0].id}`, {
             method: 'delete',
           })
             .then(res => res.json())
             .then(data => {
-              console.log(data);
               allThreads.map(thread => {
                 if (thread.id === data.thread_id) {
                   thread.like--;
@@ -69,7 +63,6 @@ class Thread extends Component {
           })
             .then(res => res.json())
             .then(data => {
-              console.log(data);
               allThreads.map(thread => {
                 if (thread.id === data.thread_id) {
                   thread.like++;
@@ -99,7 +92,6 @@ class Thread extends Component {
       .then(res => res.json())
       .then(data => {
         if (data.message) return console.log(data.message);
-        console.log(allThreads);
         const index = allThreads.findIndex(thread => thread.id === id);
         allThreads.splice(index, 1);
         this.setState({ threads: allThreads });

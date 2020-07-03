@@ -5,8 +5,6 @@ class GuestRoute extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    console.log('guestRoute');
-    console.log(this.props);
   }
   componentDidUpdate() {
     this.authChack();

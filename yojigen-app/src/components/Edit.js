@@ -15,7 +15,6 @@ class Edit extends Component {
     fetch(`/thread/${id}`)
     .then(res => res.json())
     .then(data => {
-      console.log(data);
       this.setState({
         title: data.title,
       });
@@ -62,7 +61,6 @@ class Edit extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         // this.props.history.push('/');
       })
       .catch(err => console.log(err));

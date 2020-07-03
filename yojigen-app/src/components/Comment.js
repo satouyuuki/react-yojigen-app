@@ -15,7 +15,6 @@ class Comment extends Component {
     fetch(`/thread/comments/${id}`)
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         this.setState({
           threads: data[0],
         })
@@ -73,7 +72,6 @@ class Comment extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         const newComment = this.state.comments;
         const index = newComment.findIndex(comment => comment.id === data.id);
         newComment[index] = data;
@@ -103,7 +101,6 @@ class Comment extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         if (data.message) return console.log(data.message);
         const newComment = this.state.comments;
         const index = newComment.findIndex(comment => comment.id === data.id);
@@ -137,7 +134,6 @@ class Comment extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         if (data.message) return console.log(data.message);
         const newComment = this.state.comments;
         newComment.push(data);

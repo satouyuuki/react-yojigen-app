@@ -11,9 +11,7 @@ const path = require('path');
 // middleware
 app.use(cors());
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
-
 app.listen(port, () => {
   console.log(`Start server port: ${port}`);
 });
@@ -36,16 +34,11 @@ async function getCurrentUserName(email) {
   return currentId.rows[0];
 }
 
-// app.get('/posts', authenticateToken, (req, res) => {
-//   res.json(posts.filter(post => post.name === req.user.name));
-// })
-
 app.post('/login', async (req, res) => {
   try {
     const user = await pool.query('select * from users where email = $1', [req.body.email]);
     if (typeof user.rows[0] == 'undefined') return res.status(400).send({ message: "メールアドレスが見つかりません" });
     if (await bcrypt.compare(req.body.password, user.rows[0].password)) {
-
       const accessToken = jwt.sign(user.rows[0].email, process.env.ACCESS_TOKEN_SECRET);
       res.send({ accessToken: accessToken });
     } else {
@@ -76,11 +69,7 @@ function authenticateToken(req, res, next) {
 // post like thread
 app.post('/thread/like', authenticateToken, async (req, res) => {
   try {
-    console.log('start');
-    const { id } = await getCurrentUserId(req.user);
-    console.log(id);
-    console.log(req.body);
-      
+    const { id } = await getCurrentUserId(req.user);      
     const newBody = await pool.query(
       "insert into likes (user_id, thread_id) values ($1, $2) RETURNING *",
       [
@@ -290,7 +279,6 @@ GROUP BY threads.id;`,
 app.get('/user-name', authenticateToken, async (req, res) => {
   try {
     const userName = await getCurrentUserName(req.user);
-    console.log(userName);
     res.send({
       name: userName.name,
       id: userName.id,

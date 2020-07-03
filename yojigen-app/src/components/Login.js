@@ -8,8 +8,6 @@ class Login extends Component {
       email: '',
       password: ''
     }
-    console.log('login');
-    console.log(this.props);
   }
   handleEmailVal(e) {
     this.setState({
@@ -26,7 +24,6 @@ class Login extends Component {
       this.state.email === '' ||
       this.state.password === ''
     ) return;
-    console.log(this.state);
     fetch('/login', {
       method: 'post',
       headers: {
@@ -36,7 +33,6 @@ class Login extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         localStorage.setItem('token', data.accessToken);
         this.setState({ email: '' });
         this.setState({ password: '' });

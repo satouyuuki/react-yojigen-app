@@ -40,7 +40,6 @@ class Create extends Component {
     })
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         // this.props.history.push('/');
         this.setState({ title: '' });
         this.setState({ description: '' });
