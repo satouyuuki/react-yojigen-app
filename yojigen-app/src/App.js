@@ -32,7 +32,7 @@ class App extends Component {
           <Switch>
             {/* <Route exact path='/' component={Default} /> */}
             <Route exact path="/" render={props => <Thread userId={this.state.id} {...props}/>}/>
-            <Route path="/thread/comment/:id" component={Comment} />
+            <Route path="/thread/comment/:id" render={props => <Comment userId={this.state.id} {...props} />}/>
             <Route path="/thread/edit/:id" component={Edit} />
             <Route path="/thread/create" component={Create} />
  

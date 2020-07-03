@@ -161,7 +161,7 @@ app.get('/thread', async (req, res) => {
     const query = `
       select threads.*, COUNT(likes.id) AS like
       from threads 
-      join likes 
+      left outer join likes
       on threads.id = likes.thread_id
       group by threads.id;
     `;
