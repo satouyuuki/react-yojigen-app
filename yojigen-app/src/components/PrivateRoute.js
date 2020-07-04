@@ -1,16 +1,16 @@
-import React, { Component }  from 'react';
+import React, { Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import User from './User';
-class GuestRoute extends Component {
+class PrivateRoute extends Component {
   constructor(props) {
     super(props);
   }
   render() {
     const isAuth = User.get();
     return (
-      isAuth ? <Redirect to="/" /> : <Route {...this.props} />
+      isAuth ? <Route {...this.props} /> : <Redirect to="/login" />
     );
   }
 }
+export default PrivateRoute;
 
-export default GuestRoute;

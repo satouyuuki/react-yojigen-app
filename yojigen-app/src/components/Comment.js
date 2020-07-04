@@ -149,7 +149,7 @@ class Comment extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
         <Link to="/">戻る</Link>
         <div className="msg-area">
           <div className="msg-area__head">

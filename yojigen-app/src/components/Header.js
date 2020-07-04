@@ -28,18 +28,18 @@ class Header extends Component {
   }
   render() {
     return (
-      <div>
-        <Link to="/">スレッド一覧</Link>
+      <div className="header">
+        <Link className="header__title" to="/">スレッド一覧</Link>
         {this.props.name != ''
           ? 
           <div>
-            <button onClick={this.handleLogout.bind(this)}>Log Out</button>
-            <span>{this.props.name}さん</span>
+            <Link className="header__text" to="/login" onClick={this.handleLogout.bind(this)}>Log Out</Link>
+            <span className="header__text">{this.props.name}さん</span>
           </div>
           : 
           <div>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Sign Up</Link>
+            <Link className="header__text" to="/login">Login</Link>
+            <Link className="header__text" to="/signup">Sign Up</Link>
           </div>
         }
       </div>

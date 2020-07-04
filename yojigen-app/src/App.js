@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import GuestRoute from './components/GuestRoute';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import PrivateRoute from './components/PrivateRoute';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import Header from './components/Header';
 import Create from './components/Create';
 import Edit from './components/Edit';
@@ -29,12 +30,15 @@ class App extends Component {
           <Header updateState={this.updateState} name={this.state.name}/>
           <Switch>
             <Route exact path="/" render={props => <Thread userId={this.state.id} {...props}/>}/>
-            <Route path="/thread/comment/:id" render={props => <Comment userId={this.state.id} {...props} />}/>
-            <Route path="/thread/edit/:id" component={Edit} />
-            <Route path="/thread/create" component={Create} />
+            <Route path="/thread/comment/:id" render={props => <Comment userId={this.state.id} {...props} />} />
  
-            <GuestRoute path='/login' children={<Login />}  updateState={this.updateState} name={this.state.name} />
-            <GuestRoute path='/signup' children={<Signup />}  updateState={this.updateState} name={this.state.name} />
+            <PrivateRoute path='/thread/create' children={<Create />}/>
+            <PrivateRoute path='/thread/edit/:id' render={props => <Edit {...props} />}/>
+            
+            <GuestRoute path='/login' render={props => <Login {...props} updateState={this.updateState}/>}
+               name={this.state.name} />
+            <GuestRoute path='/signup' children={<Signup />} updateState={this.updateState} name={this.state.name} />
+            <Redirect to={'/'} />
           </Switch>
         </Router>
       </div>
