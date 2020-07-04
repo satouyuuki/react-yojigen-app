@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 class Edit extends Component {
   constructor(props) {
@@ -37,6 +37,9 @@ class Edit extends Component {
       description: e.target.value
     });
   }
+  handleBack() {
+    this.props.history.push('/');
+  }
 
   handleSubmit(e) {
     if (
@@ -69,44 +72,46 @@ class Edit extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit.bind(this)}>
-        <Link to="/">戻る</Link>
-        <div className="table">
-          <div className="table__row">
-            <div className="table__head">
-              <label>タイトル:</label>
+      <div className="container">
+        <form onSubmit={this.handleSubmit.bind(this)}>
+          <div className="table">
+            <div className="table__row">
+              <div className="table__head">
+                <label>タイトル:</label>
+              </div>
+              <div className="table__body">
+                <input
+                  value={this.state.title}
+                  className="table-input"
+                  placeholder="タイトル"
+                  type="text"
+                  onChange={this.handleTitleVal.bind(this)}
+                />
+              </div>
             </div>
-            <div className="table__body">
-              <input
-                value={this.state.title}
-                className="table-input"
-                placeholder="タイトル"
-                type="text"
-                onChange={this.handleTitleVal.bind(this)}
-              />
+            <div className="table__row">
+              <div className="table__head">
+                <label>説明文:</label>
+              </div>
+              <div className="table__body">
+                <textarea
+                  value={this.state.description}
+                  className="table-textarea"
+                  placeholder="説明文"
+                  onChange={this.handleDescVal.bind(this)}
+                />
+              </div>
+            </div>
+            <div className="table__full">
+              <button className="button--back" onClick={this.handleBack.bind(this)}>戻る</button>
+              <button className="button--default" type="submit">更新</button>
             </div>
           </div>
-          <div className="table__row">
-            <div className="table__head">
-              <label>説明文:</label>
-            </div>
-            <div className="table__body">
-              <textarea
-                value={this.state.description}
-                className="table-textarea"
-                placeholder="説明文"
-                onChange={this.handleDescVal.bind(this)}
-              />
-            </div>
-          </div>
-          <div className="table__full">
-            <input className="button" type="submit" value="送信" />
-          </div>
-        </div>
-        <input type="hidden" value={this.state.userId} />
-      </form>
+          <input type="hidden" value={this.state.userId} />
+        </form>
+      </div>
     )
   }
 }
 
-export default Edit;
+export default withRouter(Edit);

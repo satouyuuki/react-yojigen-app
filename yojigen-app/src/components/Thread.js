@@ -100,7 +100,7 @@ class Thread extends Component {
   }
   render() {
     return (
-      <div>
+      <div className="container">
         {
           this.props.userId !== 0 &&
           <Link to="/thread/create">記事作成</Link>

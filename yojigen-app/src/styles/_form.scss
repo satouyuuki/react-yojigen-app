@@ -26,10 +26,11 @@
   &__full {
     border: 1px solid $light-grey;
     padding: 10px;
-    > .button {
-      max-width: 500px;
-      margin: 0 auto;
-      display: block;
+    > button {
+      max-width: 150px;
+      &:nth-child(2) {
+        margin-left: 15px;
+      }
     }
   }
 }

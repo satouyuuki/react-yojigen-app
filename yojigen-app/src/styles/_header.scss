@@ -1,0 +1,26 @@
+.header {
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $link;
+  padding: 0 10px;
+  position: fixed;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1;
+  &__title {
+    color: $base;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  &__text {
+    color: $base;
+    font-size: 1.4rem;
+    text-decoration: none;
+    &:nth-child(2) {
+      padding-left: 10px;
+    }
+  }
+}
