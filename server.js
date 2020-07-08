@@ -11,7 +11,7 @@ const path = require('path');
 // middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
+// app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
 app.listen(port, () => {
   console.log(`Start server port: ${port}`);
 });
@@ -22,14 +22,14 @@ app.get("/service-worker.js", (req, res) => {
   res.sendFile(path.join(__dirname + "/yojigen-app", "build", "service-worker.js"));
 });
 
-// app.use(express.static(__dirname));
-// app.get('/*', (req, res) => {
-//   console.log("catchall"); console.log("catchall");
-//   console.log(req.hostname); console.log(req.hostname);
-//   console.log(req.path); console.log(req.path);
-//   console.log(path.join(__dirname + '/yojigen-app', 'build', 'index.html')); console.log(path.join(__dirname + '/yojigen-app', 'build', 'index.html'));
-//   res.sendFile(path.join(__dirname + '/yojigen-app', 'build', 'index.html')); res.sendFile(path.join(__dirname + '/yojigen-app', 'build', 'index.html'));
-// });
+app.use(express.static(__dirname));
+app.get('/*', (req, res) => {
+  console.log("catchall"); console.log("catchall");
+  console.log(req.hostname); console.log(req.hostname);
+  console.log(req.path); console.log(req.path);
+  console.log(path.join(__dirname + '/yojigen-app', 'build', 'index.html')); console.log(path.join(__dirname + '/yojigen-app', 'build', 'index.html'));
+  res.sendFile(path.join(__dirname + '/yojigen-app', 'build', 'index.html')); res.sendFile(path.join(__dirname + '/yojigen-app', 'build', 'index.html'));
+});
 
 // jwt //
 
