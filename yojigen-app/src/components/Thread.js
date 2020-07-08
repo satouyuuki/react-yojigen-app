@@ -13,7 +13,7 @@ class Thread extends Component {
     }
   }
   componentDidMount() {
-    fetch('/thread')
+    fetch('/api/thread')
       .then(res => res.json())
       .then(data => {
         this.setState({
@@ -31,7 +31,7 @@ class Thread extends Component {
     if (typeof token === 'undefined') return;
     const userId = this.props.userId;
     const allThreads = this.state.threads;
-    fetch(`/like`, {
+    fetch(`/api/like`, {
       method: 'post',
       headers: {
         "Content-type": 'application/json',
@@ -41,7 +41,7 @@ class Thread extends Component {
       .then(res => res.json())
       .then(data => {
         if (data.length) {
-          fetch(`/thread/like/${data[0].id}`, {
+          fetch(`/api/thread/like/${data[0].id}`, {
             method: 'delete',
           })
             .then(res => res.json())
@@ -57,7 +57,7 @@ class Thread extends Component {
             })
             .catch(err => console.log(err));
         } else {
-          fetch('/thread/like', {
+          fetch('/api/thread/like', {
             method: 'post',
             headers: {
               "Content-type": 'application/json',
@@ -89,7 +89,7 @@ class Thread extends Component {
     console.log(deleteThread);
     const result = window.confirm('本当に削除しますか？');
     if (!result) return;
-    fetch(`/thread/${id}`, {
+    fetch(`/api/thread/${id}`, {
       method: 'delete',
       headers: {
         "Content-type": 'application/json',

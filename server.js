@@ -11,24 +11,9 @@ const path = require('path');
 // middleware
 app.use(cors());
 app.use(express.json());
-// app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
+app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
 app.listen(port, () => {
   console.log(`Start server port: ${port}`);
-});
-
-// 変更点
-
-app.get("/service-worker.js", (req, res) => {
-  res.sendFile(path.join(__dirname + "/yojigen-app", "build", "service-worker.js"));
-});
-
-app.use(express.static(__dirname));
-app.get('/*', (req, res) => {
-  console.log("catchall"); console.log("catchall");
-  console.log(req.hostname); console.log(req.hostname);
-  console.log(req.path); console.log(req.path);
-  console.log(path.join(__dirname + '/yojigen-app', 'build', 'index.html')); console.log(path.join(__dirname + '/yojigen-app', 'build', 'index.html'));
-  res.sendFile(path.join(__dirname + '/yojigen-app', 'build', 'index.html')); res.sendFile(path.join(__dirname + '/yojigen-app', 'build', 'index.html'));
 });
 
 // jwt //
@@ -49,7 +34,7 @@ async function getCurrentUserName(email) {
   return currentId.rows[0];
 }
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   try {
     const user = await pool.query('select * from users where email = $1', [req.body.email]);
     if (typeof user.rows[0] == 'undefined') return res.status(400).send({ message: "メールアドレスが見つかりません" });
@@ -82,7 +67,7 @@ function authenticateToken(req, res, next) {
 // ROUTES //
 
 // post like thread
-app.post('/thread/like', authenticateToken, async (req, res) => {
+app.post('/api/thread/like', authenticateToken, async (req, res) => {
   try {
     const { id } = await getCurrentUserId(req.user);      
     const newBody = await pool.query(
@@ -99,7 +84,7 @@ app.post('/thread/like', authenticateToken, async (req, res) => {
 })
 
 // create a thread
-app.post('/thread', authenticateToken, async (req, res) => {
+app.post('/api/thread', authenticateToken, async (req, res) => {
   try {
     const body = req.body;
     const { id } = await getCurrentUserId(req.user);
@@ -118,7 +103,7 @@ app.post('/thread', authenticateToken, async (req, res) => {
 });
 
 // create a comment
-app.post('/comment', authenticateToken, async (req, res) => {
+app.post('/api/comment', authenticateToken, async (req, res) => {
   try {
     const { id } = await getCurrentUserId(req.user);
     const body = req.body;
@@ -137,7 +122,7 @@ app.post('/comment', authenticateToken, async (req, res) => {
 });
 
 // create a user
-app.post('/user', async (req, res) => {
+app.post('/api/user', async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const user = {
@@ -160,7 +145,7 @@ app.post('/user', async (req, res) => {
 });
 
 // get all threads
-app.get('/thread', async (req, res) => {
+app.get('/api/thread', async (req, res) => {
   try {
     const query = `
       select 
@@ -182,7 +167,7 @@ app.get('/thread', async (req, res) => {
 });
 
 // get user like
-app.post('/like', async (req, res) => {
+app.post('/api/like', async (req, res) => {
   try {
     const query = {
       text: `
@@ -201,7 +186,7 @@ app.post('/like', async (req, res) => {
 });
 
 // delete  like
-app.delete('/thread/like/:id', async (req, res) => {
+app.delete('/api/thread/like/:id', async (req, res) => {
   try {
     const query = {
       text: `
@@ -219,7 +204,7 @@ app.delete('/thread/like/:id', async (req, res) => {
 });
 
 // get all comments
-app.get('/comment/:threadId', async (req, res) => {
+app.get('/api/comment/:threadId', async (req, res) => {
   try {
     const threadId = req.params.threadId;
     const allComment = await pool.query("select * from comments where thread_id = $1", [threadId]);
@@ -230,7 +215,7 @@ app.get('/comment/:threadId', async (req, res) => {
 });
 
 // get all users
-app.get('/user', async (req, res) => {
+app.get('/api/user', async (req, res) => {
   try {
     const allUsers = await pool.query("select * from users");
     res.json(allUsers.rows);
@@ -240,7 +225,7 @@ app.get('/user', async (req, res) => {
 });
 
 // get a thread
-app.get('/thread/comments/:id', async (req, res) => {
+app.get('/api/thread/comments/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const threadQuery = {
@@ -260,7 +245,7 @@ GROUP BY threads.id;`,
   }
 });
 // get a thread
-app.get('/thread/:id', async (req, res) => {
+app.get('/api/thread/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const threadQuery = {
@@ -275,7 +260,7 @@ app.get('/thread/:id', async (req, res) => {
 });
 
 // get a user name
-app.get('/user-name', authenticateToken, async (req, res) => {
+app.get('/api/user-name', authenticateToken, async (req, res) => {
   try {
     const userName = await getCurrentUserName(req.user);
     res.send({
@@ -288,7 +273,7 @@ app.get('/user-name', authenticateToken, async (req, res) => {
 });
 
 // update a thread
-app.put('/thread/:id', authenticateToken, async (req, res) => {
+app.put('/api/thread/:id', authenticateToken, async (req, res) => {
   try {
     const userId = await getCurrentUserId(req.user);
     if (userId.id !== req.body.user_id) {
@@ -313,7 +298,7 @@ app.put('/thread/:id', authenticateToken, async (req, res) => {
 });
 
 // update a user
-app.put('/user/:id', async (req, res) => {
+app.put('/api/user/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const body = req.body;
@@ -334,7 +319,7 @@ app.put('/user/:id', async (req, res) => {
 });
 
 // update a comment
-app.put('/comment/:id', authenticateToken, async (req, res) => {
+app.put('/api/comment/:id', authenticateToken, async (req, res) => {
   try {
     const { id } = req.params;
     const body = req.body;
@@ -358,7 +343,7 @@ app.put('/comment/:id', authenticateToken, async (req, res) => {
 });
 
 // delete a thread
-app.delete('/thread/:id', authenticateToken, async (req, res) => {
+app.delete('/api/thread/:id', authenticateToken, async (req, res) => {
   try {
     const userId = await getCurrentUserId(req.user);
     if (userId.id !== req.body.user_id) {
@@ -377,7 +362,7 @@ app.delete('/thread/:id', authenticateToken, async (req, res) => {
 });
 
 // delete a comment
-app.delete('/comment/:id', authenticateToken, async (req, res) => {
+app.delete('/api/comment/:id', authenticateToken, async (req, res) => {
   try {
     const userId = await getCurrentUserId(req.user);
     if (userId.id !== req.body.user_id) {

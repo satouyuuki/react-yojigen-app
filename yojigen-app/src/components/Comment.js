@@ -13,7 +13,7 @@ class Comment extends Component {
   }
   componentDidMount() {
     const id = this.props.match.params.id;
-    fetch(`/thread/comments/${id}`)
+    fetch(`/api/thread/comments/${id}`)
       .then(res => res.json())
       .then(data => {
         this.setState({
@@ -67,7 +67,7 @@ class Comment extends Component {
       user_id: updateComment[0].user_id,
     }
 
-    fetch(`/comment/${id}`, {
+    fetch(`/api/comment/${id}`, {
       method: 'put',
       headers: {
         "Content-type": 'application/json',
@@ -98,7 +98,7 @@ class Comment extends Component {
       user_id: deleteComment[0].user_id,
     }
 
-    fetch(`/comment/${id}`, {
+    fetch(`/api/comment/${id}`, {
       method: 'delete',
       headers: {
         "Content-type": 'application/json',
@@ -133,7 +133,7 @@ class Comment extends Component {
       comment: this.state.comment
     }
 
-    fetch(`/comment`, {
+    fetch(`/api/comment`, {
       method: 'post',
       headers: {
         "Content-type": 'application/json',
