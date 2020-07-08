@@ -16,6 +16,7 @@ class Thread extends Component {
     fetch('/api/thread')
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         this.setState({
           threads: data
         })
