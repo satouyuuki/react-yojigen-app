@@ -25,7 +25,7 @@ class Login extends Component {
       this.state.email === '' ||
       this.state.password === ''
     ) return;
-    fetch('/login', {
+    fetch('/api/login', {
       method: 'post',
       headers: {
         "Content-type": 'application/json'

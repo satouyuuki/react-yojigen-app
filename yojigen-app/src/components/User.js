@@ -4,7 +4,7 @@ class User {
     let token = localStorage.getItem('token');
     if (token === null) return;
     token += "Bearer " + token;
-    return fetch('/user-name', {
+    return fetch('/api/user-name', {
       headers: {
         "Content-type": 'application/json',
         "Authorization": token,

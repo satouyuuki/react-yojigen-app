@@ -8,7 +8,7 @@ class Header extends Component {
   componentDidMount() {
     const token = User.getToken();
     if (typeof token === 'undefined') return;
-    fetch('/user-name', {
+    fetch('/api/user-name', {
       headers: {
         "Content-type": 'application/json',
         "Authorization": token,

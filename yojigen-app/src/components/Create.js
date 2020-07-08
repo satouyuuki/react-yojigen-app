@@ -35,7 +35,7 @@ class Create extends Component {
     const token = User.getToken();
     if (typeof token === 'undefined') return;
 
-    fetch('/thread', {
+    fetch('/api/thread', {
       method: 'post',
       headers: {
         "Content-type": 'application/json',

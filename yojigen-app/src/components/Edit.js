@@ -12,7 +12,7 @@ class Edit extends Component {
   }
   componentDidMount() {
     const id = this.props.match.params.id;
-    fetch(`/thread/${id}`)
+    fetch(`/api/thread/${id}`)
     .then(res => res.json())
     .then(data => {
       this.setState({
@@ -55,7 +55,7 @@ class Edit extends Component {
     const id = this.props.match.params.id;
     const token = User.getToken();
     if (typeof token === 'undefined') return;
-    fetch(`/thread/${id}`, {
+    fetch(`/api/thread/${id}`, {
       method: 'put',
       headers: {
         "Content-type": 'application/json',
