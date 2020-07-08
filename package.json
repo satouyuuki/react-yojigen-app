@@ -9,6 +9,10 @@
     "server": "json-server --watch db.json",
     "dev": "nodemon server.js"
   },
+  "engines": {
+    "node": "v10.15.X",
+    "npm": "6.14.X"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
