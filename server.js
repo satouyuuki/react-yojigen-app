@@ -11,10 +11,9 @@ const path = require('path');
 // middleware  
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
-app.get('/yojigen-app/*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'yojigen-app/build', 'index.html'));
-});
+
+app.use(express.static(path.resolve(__dirname, 'yojigen-app/build')));
+
 app.listen(port, () => {
   console.log(`Start server port: ${port}`);
 });
@@ -381,5 +380,9 @@ app.delete('/api/comment/:id', authenticateToken, async (req, res) => {
   } catch (err) {
     console.log(err.message);
   }
+});
+
+app.get('*', function (request, response) {
+  response.sendFile(path.resolve(__dirname, 'yojigen-app/build', 'index.html'));
 });
 
