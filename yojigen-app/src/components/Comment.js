@@ -16,6 +16,7 @@ class Comment extends Component {
     fetch(`/api/thread/comments/${id}`)
       .then(res => res.json())
       .then(data => {
+        console.log(data);
         this.setState({
           threads: data[0],
         })
