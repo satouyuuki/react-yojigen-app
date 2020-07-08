@@ -148,10 +148,15 @@ app.post('/user', async (req, res) => {
 app.get('/thread', async (req, res) => {
   try {
     const query = `
-      select threads.*, COUNT(likes.id) AS like
+      select 
+        threads.*, 
+        COUNT(likes.id) AS like,
+        COUNT(comments.id) AS comment
       from threads 
       left outer join likes
-      on threads.id = likes.thread_id
+        on threads.id = likes.thread_id
+      left outer join comments
+        on threads.id = comments.thread_id
       group by threads.id;
     `;
     const allThread = await pool.query(query);
@@ -226,7 +231,7 @@ app.get('/thread/comments/:id', async (req, res) => {
     const threadQuery = {
       text: `select 
   threads.*,
-  coalesce (json_agg(comments), '[]'::json) as comments
+  json_agg(comments) as comments
 from threads
   left outer join comments on threads.id = comments.thread_id
 where threads.id = $1
@@ -254,27 +259,6 @@ app.get('/thread/:id', async (req, res) => {
   }
 });
 
-// get a thread and comments
-app.get('/thread/comments/:id', async (req, res) => {
-  try {
-    const id = req.params.id;
-    const threadQuery = {
-      text: `select 
-  threads.*,
-  coalesce (json_agg(comments), '[]'::json) as comments
-from threads
-  left outer join comments on threads.id = comments.thread_id
-where threads.id = $1
-GROUP BY threads.id;`,
-      params: [id]
-    }
-    const allThread = await pool.query(threadQuery.text, threadQuery.params);
-    res.json(allThread.rows);
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-
 // get a user name
 app.get('/user-name', authenticateToken, async (req, res) => {
   try {
@@ -283,10 +267,6 @@ app.get('/user-name', authenticateToken, async (req, res) => {
       name: userName.name,
       id: userName.id,
     });
-    // const allThread = await pool.query(threadQuery.text, threadQuery.params);
-    // const id = req.params.id;
-    // const allThread = await pool.query("select * from users WHERE id = $1", [id]);
-    // res.json(allThread.rows[0]);
   } catch (err) {
     console.log(err.message);
   }
@@ -370,6 +350,7 @@ app.delete('/thread/:id', authenticateToken, async (req, res) => {
       return res.send({ message: "削除できません" })
     } else {
       const id = req.params.id;
+      console.log(id);
       const deleteBody = await pool.query(
         "delete from threads where id = $1 RETURNING *", [id]
       );

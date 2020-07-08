@@ -21,12 +21,18 @@
     background-color: $button;
     box-shadow: 0px 4px 0px $bottom;
     color: $base;
+    display: block;
+    text-align: center;
+    line-height: 35px;
   }
   &--back {
     @extend %button;
     background-color: $grey;
     box-shadow: 0px 4px 0px $deep-grey;
     color: $base;
+    display: block;
+    text-align: center;
+    line-height: 35px;
   }
 }
 

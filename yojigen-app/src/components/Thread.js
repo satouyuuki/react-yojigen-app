@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment'
 import { AiFillHeart } from "react-icons/ai";
+import { FaComment } from "react-icons/ai";
+import { FcComments } from "react-icons/fc";
+import User from './User';
 class Thread extends Component {
   constructor(props) {
     super(props);
@@ -23,8 +26,9 @@ class Thread extends Component {
     this.props.history.push(`/thread/edit/${id}`);
   }
   handleLike(threadId) {
-    if (!localStorage.getItem('token')) return alert('ログインしてください');
-    const token = "Bearer " + localStorage.getItem('token');
+    if (!User.get()) return alert('ログインしてください');
+    const token = User.getToken();
+    if (typeof token === 'undefined') return;
     const userId = this.props.userId;
     const allThreads = this.state.threads;
     fetch(`/like`, {
@@ -78,9 +82,13 @@ class Thread extends Component {
       .catch(err => console.log(err));
   }
   handleDeleteThread(id) {
-    const token = "Bearer " + localStorage.getItem('token');
+    const token = User.getToken();
+    if (typeof token === 'undefined') return;
     const allThreads = this.state.threads;
     const deleteThread = allThreads.filter(thread => thread.id === id);
+    console.log(deleteThread);
+    const result = window.confirm('本当に削除しますか？');
+    if (!result) return;
     fetch(`/thread/${id}`, {
       method: 'delete',
       headers: {
@@ -103,7 +111,9 @@ class Thread extends Component {
       <div className="container">
         {
           this.props.userId !== 0 &&
-          <Link to="/thread/create">記事作成</Link>
+          <Link
+            className="button--default"
+            to="/thread/create">記事作成</Link>
         }
         <ul className="thre-group">
             {
@@ -112,12 +122,17 @@ class Thread extends Component {
                   <Link to={`/thread/comment/${thread.id}`}>
                     <p className="thre-card__title">タイトル: {thread.title}</p>
                   </Link>
-                  最終更新日: {moment(thread.updated_date).format('YYYY/MM/DD h:mm')}<br />
-                  作成日: {moment(thread.created_date).format('YYYY/MM/DD h:mm')}<br />
+                  最終更新日: {moment(thread.updated_date).format('YYYY/MM/DD k:mm')}<br />
+                  作成日: {moment(thread.created_date).format('YYYY/MM/DD k:mm')}<br />
                   <AiFillHeart
                     onClick={this.handleLike.bind(this, thread.id)}
                     className="i-heart"
-                  />: {thread.like}<br />
+                  />: {thread.like}
+                  <Link to={`/thread/comment/${thread.id}`}>
+                    <FcComments
+                      className="i-comment"
+                    />: {thread.comment}
+                  </Link><br/>
                   ユーザID: {thread.user_id}<br />
                   {
                     this.props.userId === thread.user_id &&

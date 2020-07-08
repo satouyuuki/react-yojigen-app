@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
+import User from './User';
 class Header extends Component {
   constructor(props) {
     super(props);
   }
   componentDidMount() {
-    let token = localStorage.getItem('token');
-    if (token === null) return;
-    token += "Bearer " + token;
+    const token = User.getToken();
+    if (typeof token === 'undefined') return;
     fetch('/user-name', {
       headers: {
         "Content-type": 'application/json',

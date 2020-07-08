@@ -13,6 +13,11 @@ class User {
       .then(res => res.json())
       .catch(err => console.log(err));
   }
+  getToken() {
+    let token = localStorage.getItem('token');
+    if (token === null) return;
+    return token += "Bearer " + token;
+  }
 }
 
 export default new User();
