@@ -13,7 +13,7 @@ class Thread extends Component {
     }
   }
   componentDidMount() {
-    fetch('/api/thread')
+    fetch('http://localhost:3001/api/thread')
       .then(res => res.json())
       .then(data => {
         this.setState({
