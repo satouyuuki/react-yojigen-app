@@ -78,7 +78,7 @@ class Signup extends Component {
             />
           </div>
           <div className="input-wrap">
-            <input className="button" type="submit" value="送信"/>
+            <input className="button--default" type="submit" value="送信"/>
           </div>
         </form>
         <Link className="card-link" to="/login">ログインはこちら</Link>

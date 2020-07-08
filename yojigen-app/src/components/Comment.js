@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
+import User from './User';
 class Comment extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +35,9 @@ class Comment extends Component {
       comment: e.target.value
     })
   }
+  handleBack() {
+    this.props.history.push('/');
+  }
 
   handleToggleEditFlg(id) {
     const updateComments = this.state.comments;
@@ -56,7 +60,8 @@ class Comment extends Component {
     if (
       updateComment[0].comment === ''
     ) return;
-    const token = "Bearer " + localStorage.getItem('token');
+    const token = User.getToken();
+    if (typeof token === 'undefined') return;
     const submitBody = {
       comment: updateComment[0].comment,
       user_id: updateComment[0].user_id,
@@ -86,7 +91,9 @@ class Comment extends Component {
   handleDeleteCommentSubmit(id, e) {
     let deleteComment = this.state.comments;
     deleteComment = deleteComment.filter(comment => comment.id === id);
-    const token = "Bearer " + localStorage.getItem('token');
+    const token = User.getToken();
+    if (typeof token === 'undefined') return;
+
     const submitBody = {
       user_id: deleteComment[0].user_id,
     }
@@ -118,7 +125,9 @@ class Comment extends Component {
       this.state.comment === ''
     ) return;
     const id = this.props.match.params.id;
-    const token = "Bearer " + localStorage.getItem('token');
+    const token = User.getToken();
+    if (typeof token === 'undefined') return;
+
     const newComment = {
       thread_id: id,
       comment: this.state.comment
@@ -150,7 +159,6 @@ class Comment extends Component {
   render() {
     return (
       <div className="container">
-        <Link to="/">戻る</Link>
         <div className="msg-area">
           <div className="msg-area__head">
             <h3>{this.state.threads.title}</h3>
@@ -161,10 +169,10 @@ class Comment extends Component {
                 {this.state.threads.description}
               </p>
               <p>
-                作成日: {moment(this.state.threads.created_date).format('YYYY/MM/DD h:mm')}
+                作成日: {moment(this.state.threads.created_date).format('YYYY/MM/DD k:mm')}
               </p>
               <p>
-                最終更新日: {moment(this.state.threads.updated_date).format('YYYY/MM/DD h:mm')}
+                最終更新日: {moment(this.state.threads.updated_date).format('YYYY/MM/DD k:mm')}
               </p>
 
               <ul>
@@ -185,8 +193,8 @@ class Comment extends Component {
                         :
                         <p className={'comment' + ' ' + (this.state.threads.user_id === comment.user_id ? 'left' : 'right')}>{ comment.comment }</p>
                       }
-                    作成日: {moment(comment.created_date).format('YYYY/MM/DD h:mm')}<br />
-                    更新日: {moment(comment.updated_date).format('YYYY/MM/DD h:mm')}<br />
+                    作成日: {moment(comment.created_date).format('YYYY/MM/DD k:mm')}<br />
+                    更新日: {moment(comment.updated_date).format('YYYY/MM/DD k:mm')}<br />
                     ユーザID: {comment.user_id}<br />
                     記事iD: {comment.thread_id}<br />
                       {
@@ -211,7 +219,11 @@ class Comment extends Component {
                   placeholder="コメントを送信してください"
                   onChange={this.handleCommentVal.bind(this)}
                 />
-                <input className="cmt-buttom" type="submit" value="送信" />
+                <button
+                  className="cmt-back-buttom"
+                  onClick={this.handleBack.bind(this)}  
+                >戻る</button>
+                <button className="cmt-buttom" type="submit">投稿</button>
               </div>
 
             </form>

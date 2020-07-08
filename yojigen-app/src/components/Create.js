@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-
+import User from './User';
 class Create extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +32,9 @@ class Create extends Component {
       title: this.state.title,
       description: this.state.description,
     }
-    const token = "Bearer " + localStorage.getItem('token');
+    const token = User.getToken();
+    if (typeof token === 'undefined') return;
+
     fetch('/thread', {
       method: 'post',
       headers: {

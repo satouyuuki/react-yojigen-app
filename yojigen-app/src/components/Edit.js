@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-
+import User from './User';
 class Edit extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +53,8 @@ class Edit extends Component {
       user_id: this.state.userId
     }
     const id = this.props.match.params.id;
-    const token = "Bearer " + localStorage.getItem('token');
+    const token = User.getToken();
+    if (typeof token === 'undefined') return;
     fetch(`/thread/${id}`, {
       method: 'put',
       headers: {
