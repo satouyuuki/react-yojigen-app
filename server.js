@@ -12,6 +12,9 @@ const path = require('path');
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
+app.get('/yojigen-app/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'yojigen-app/build', 'index.html'));
+});
 app.listen(port, () => {
   console.log(`Start server port: ${port}`);
 });
