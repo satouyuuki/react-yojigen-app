@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const path = require('path');
 
-// middleware 
+// middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'yojigen-app/build')));
