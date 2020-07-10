@@ -23,23 +23,22 @@
 ---
 ### 進め方
 ---
-Postmanを使い、バックエンドから開発
-<img src="gitpitch-img/postman.png"/>  
----
+Postmanを使い、バックエンドから開発<br>
 その後Reactでフロントページを作成し、herokuにデプロイ
----
-ローカルでの動作環境
+<img src="gitpitch-img/postman.png"/>  
 
+---
 <img src="gitpitch-img/localimg.png"/>  
-
 ---
-### 本番環境(heroku)
 - build済みindex.htmlを返す
 - データベースから返ってきたjsonを返す
 <img src="gitpitch-img/productimg.png"/>  
 ---
 フォルダ構成
 <img src="gitpitch-img/folder.png"/>  
+---?code=server.js&lang=javascript&title=本番でのexpress
+
+@[15](buildしたフロントページを返す)
 ---
 ### ER図(テーブル)
 <img src="gitpitch-img/table.png"/>  
@@ -47,7 +46,6 @@ Postmanを使い、バックエンドから開発
 ### つまり
 - １つのスレッドには0 or 複数のコメントが結びついている |
 - スレッド、コメント、いいねは[user_id]を紐付けて、誰がしたか分かる |
-- ユーザがどのスレッドにいいね、またはコメントしたか分かる |
 
 ---
 ### フロント側画面構成
@@ -91,9 +89,9 @@ Postmanを使い、バックエンドから開発
 </tbody>
 </table>
 ---
-### フロント側で必要な情報
-1. ログインしているかどうか => accessToken 
-2. 編集・削除が可能か => ユーザーID
+### Q. どうやって振り分けるか
+- A. ログインしているかどうか => accessToken |
+
 
 ---?code=yojigen-app/src/components/User.js&lang=javascript&title=login or not
 @[2](ローカルストレージにtokenがあるかどうか判定)
@@ -103,9 +101,6 @@ Postmanを使い、バックエンドから開発
 
 ---?code=yojigen-app/src/components/PrivateRoute.js&lang=javascript&title=login
 @[9-12](accessTokenがあるならcreate/editページをロードできる)
-
----
-フロント作成時にぶち当たった壁
 
 ---
 ### 本番デプロイ時
@@ -124,7 +119,7 @@ Postmanを使い、バックエンドから開発
 * add-onの追加(postgres)
 * 環境変数の追加(postgres環境変数とaccessToken変数)
 
----?code=package.json&lang=javascript&title=Express側のpackage.json
+---?code=package.json&lang=javascript&title=package.json
 @[8](デプロイ時にReactのコードをbuildするように設定)
 
 ---?code=server.js&lang=javascript&title=Expressに追加
