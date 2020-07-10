@@ -36,7 +36,7 @@ Postmanを使い、バックエンドから開発<br>
 ---
 フォルダ構成
 <img src="gitpitch-img/folder.png"/>  
----?code=server.js&lang=javascript&title=本番でのexpress
+---?code=server.js&lang=javascript&title=server.js
 
 @[15](buildしたフロントページを返す)
 ---
@@ -112,18 +112,14 @@ Postmanを使い、バックエンドから開発<br>
   * .envファイルに環境変数を記載
 * React側
   * static.jsonの作成(heroku標準のwebpackから切り替えるため)
-
 ---
-### heroku側
-* githubとherokuの連携(任意)
-* add-onの追加(postgres)
-* 環境変数の追加(postgres環境変数とaccessToken変数)
+<img src="gitpitch-img/folder2.png"/>  
 
 ---?code=package.json&lang=javascript&title=package.json
 @[8](デプロイ時にReactのコードをbuildするように設定)
 
----?code=server.js&lang=javascript&title=Expressに追加
-@[15](Expressサーバーは静的ファイルを出力)
+---?code=server.js&lang=javascript&title=server.js
+
 @[385-387](これがないとlocalでは動くが、本番環境では動かない)
 
 ---
