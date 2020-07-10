@@ -34,6 +34,47 @@
 |  /thread/create  |  ログイン済みのみ  |
 |  /thread/edit:id  |  ログイン済みのみ  |
 |  合計  |  6画面  |
+
+---
+<table>
+<thead>
+<tr>
+<td>URL</td>
+<td>表示条件</td>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/</td>
+<td>誰でもみれる</td>
+</tr>
+<tr>
+<td>/thread/comment:id</td>
+<td>誰でもみれる</td>
+</tr>
+<tr>
+<td>/login</td>
+<td>未ログインのみ</td>
+</tr>
+<tr>
+<td>/signup</td>
+<td>未ログインのみ</td>
+</tr>
+<tr>
+<td>/thread/create</td>
+<td>ログイン済みのみ</td>
+</tr>
+<tr>
+<td>/thread/edit/:id</td>
+<td>ログイン済みのみ</td>
+</tr>
+<tr>
+<td>合計</td>
+<td>6画面</td>
+</tr>
+
+</tbody>
+</table>
 ---
 フロント側で必要な情報
 1. ログインしているかどうか => accessToken 
@@ -47,9 +88,6 @@
 
 ---?code=yojigen-app/src/components/PrivateRoute.js&lang=javascript&title=ログインしてなかったら
 @[9-12](accessTokenがあるならcreate/editページをロードできる)
-
-accessToken => ログインしているかどうか
-ユーザーID => ログインしてるユーザが誰なのか
 ---
 ローカルでは全て違うポート番号
 で作成します
