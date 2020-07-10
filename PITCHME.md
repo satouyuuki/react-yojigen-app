@@ -23,7 +23,33 @@
 
 ---
 # 進め方
+---
+画面構成
+|  URL  |  表示条件  |
+| ---- | ---- |
+|  /  |  誰でもみれる  |
+|  /thread/comment:id  |  誰でもみれる  |
+|  /login  |  未ログインのみ  |
+|  /signup  |  未ログインのみ  |
+|  /thread/create  |  ログイン済みのみ  |
+|  /thread/edit:id  |  ログイン済みのみ  |
+|  合計  |  6画面  |
+---
+フロント側で必要な情報
+1. ログインしているかどうか => accessToken 
+2. 編集・削除が可能か => ユーザーID
 
+---?code=yojigen-app/src/components/User.js&lang=javascript&title=ログインしてるかどうか
+@[2](ローカルストレージにtokenがあるかどうか判定)
+
+---?code=yojigen-app/src/components/GuestRoute.js&lang=javascript&title=ログインしてたら
+@[9-12](accessTokenがないならlogin/signupページをロードできる)
+
+---?code=yojigen-app/src/components/PrivateRoute.js&lang=javascript&title=ログインしてなかったら
+@[9-12](accessTokenがあるならcreate/editページをロードできる)
+
+accessToken => ログインしているかどうか
+ユーザーID => ログインしてるユーザが誰なのか
 ---
 ローカルでは全て違うポート番号
 で作成します
