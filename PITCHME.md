@@ -4,13 +4,14 @@
 **名前**：ゆうき      
 　  
 **仕事**：アドテク系のWebの受託開発
+　  
 先月SES会社から転職し、 
 7/16(木)入社
 
 ---
 ### 実際に作ったもの
 
-[https://yojigen-app.herokuapp.com/](https://yojigen-app.herokuapp.com/){:target="_blank"}
+<a href="https://yojigen-app.herokuapp.com/" target="_brank">リンク</a>
 
 ---
 # 使用した技術
