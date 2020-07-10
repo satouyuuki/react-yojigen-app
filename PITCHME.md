@@ -25,10 +25,14 @@
 # 進め方
 
 ---
-ローカルでは全て違うポート番号のlocalhostで作成します
+ローカルでは全て違うポート番号
+で作成します
 <img src="gitpitch-img/localimg.png"/>  
 ---
-本番ではExpressは静的ファイルを提供するサーバー＋対象のURLにアクセスが来たらjsonを返すサーバーとしての役割を果たす
+本番ではExpressは静的ファイルを提供
+＋
+jsonを返すapiサーバー
+としての役割します
 <img src="gitpitch-img/localimg.png"/>  
 
 * 初期
