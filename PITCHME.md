@@ -24,6 +24,14 @@
 ---
 # 進め方
 
+---
+ローカルでは全て違うポート番号のlocalhostで作成します
+<img src="assets/AddPitchme.png"/> 
+
+---
+本番ではExpressは静的ファイルを提供するサーバー＋対象のURLにアクセスが来たらjsonを返すサーバーとしての役割を果たす
+<img src="assets/AddPitchme.png"/>  
+
 * 初期
   * json-server+Express+postman
 * 中期
