@@ -36,6 +36,55 @@ async function getCurrentUserName(email) {
   return currentId.rows[0];
 }
 
+async function isLikedUser(userId, threadId) {
+  console.log({ userId, threadId });
+  const query = {
+    text: `
+      select id from likes where user_id = $1 and thread_id = $2;
+    `,
+    params: [
+      userId,
+      threadId
+    ]
+  }
+  const allThread = await pool.query(query.text, query.params);
+  return allThread.rows;
+}
+
+app.post('/apitest/like/:threadId', authenticateToken, async (req, res) => {
+  try {
+    const { id } = await getCurrentUserId(req.user);
+    const threadId = req.params.threadId;
+    const likeUser = await isLikedUser(id.toString(), threadId);
+    if (likeUser.length) {
+      // idが帰ってきたら削除
+      const query = {
+        text: `
+      delete from likes where id = $1 RETURNING *;
+    `,
+        params: [
+          likeUser[0].id
+        ]
+      }
+      const result = await pool.query(query.text, query.params);
+      res.json(result.rows[0]);
+    } else {
+       // idが帰って来なかったら追加
+      const query = {
+        text: "insert into likes (user_id, thread_id) values ($1, $2) RETURNING *",
+        params: [
+          id,
+          threadId,
+        ]
+      };
+      const result = await pool.query(query.text, query.params);
+      res.json(result.rows[0]);
+    }
+  } catch (err) {
+    console.log(err.message);
+  }
+})
+
 app.post('/api/login', async (req, res) => {
   try {
     const user = await pool.query('select * from users where email = $1', [req.body.email]);
@@ -152,8 +201,8 @@ app.get('/api/thread', async (req, res) => {
     const query = `
       select 
         threads.*, 
-        COUNT(likes.id) AS like,
-        COUNT(comments.id) AS comment
+        COUNT(DISTINCT likes.id) AS like,
+        COUNT(DISTINCT comments.id) AS comment
       from threads 
       left outer join likes
         on threads.id = likes.thread_id

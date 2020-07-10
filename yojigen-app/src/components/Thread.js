@@ -13,6 +13,9 @@ class Thread extends Component {
     }
   }
   componentDidMount() {
+    this.getThreads();
+  }
+  getThreads() {
     fetch('/api/thread')
       .then(res => res.json())
       .then(data => {
@@ -32,53 +35,18 @@ class Thread extends Component {
     if (typeof token === 'undefined') return;
     const userId = this.props.userId;
     const allThreads = this.state.threads;
-    fetch(`/api/like`, {
+    fetch(`/apitest/like/${threadId}`, {
       method: 'post',
       headers: {
         "Content-type": 'application/json',
+        "Authorization": token
       },
       body: JSON.stringify({ threadId, userId })
     })
       .then(res => res.json())
       .then(data => {
-        if (data.length) {
-          fetch(`/api/thread/like/${data[0].id}`, {
-            method: 'delete',
-          })
-            .then(res => res.json())
-            .then(data => {
-              allThreads.map(thread => {
-                if (thread.id === data.thread_id) {
-                  thread.like--;
-                }
-              })
-              this.setState({
-                threads: allThreads
-              });
-            })
-            .catch(err => console.log(err));
-        } else {
-          fetch('/api/thread/like', {
-            method: 'post',
-            headers: {
-              "Content-type": 'application/json',
-              "Authorization": token
-            },
-            body: JSON.stringify({ threadId })
-          })
-            .then(res => res.json())
-            .then(data => {
-              allThreads.map(thread => {
-                if (thread.id === data.thread_id) {
-                  thread.like++;
-                }
-              })
-              this.setState({
-                threads: allThreads
-              });
-            })
-            .catch(err => console.log(err));
-        }
+        console.log(data);
+        this.getThreads();
       })
       .catch(err => console.log(err));
   }
