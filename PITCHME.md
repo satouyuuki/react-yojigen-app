@@ -1,41 +1,54 @@
-# 自己紹介
-ゆうき(企画者)
+### Reactを使った開発のすすめ方
 ---
-# 伝えたいこと
-どのようにしてサービスを完成させたか
+### 自己紹介
+**名前**：ゆうき      
+　  
+**仕事**：アドテク系のWebの受託開発
+先月SES会社から転職し、 
+7/16(木)入社
 
 ---
-# 作りたかったもの
-非エンジニアとエンジニアをつなぐプラットフォーム
-理由: 何か作りたいけど作りたいものがないエンジニア向けに非エンジニアの不満から何かアイデアを生み出せないかと思ったから。
+### 実際に作ったもの
 
----
-# 出来たもの
-
-掲示板(笑)
+[https://yojigen-app.herokuapp.com/](https://yojigen-app.herokuapp.com/){:target="_blank"}
 
 ---
 # 使用した技術
 
-* フロントエンド: React
-* バックエンド: Express(nodejs版のlaravelやrailsのようなもの)
-* インフラ/db: Heroku/postgres
+- フロントエンド: React |
+- バックエンド: Express(nodejs版のlaravelやrailsのようなもの) |
+- インフラ/db: Heroku/postgres |
 
 ---
-# 進め方
+### 進め方
 ---
-画面構成
-|  URL  |  表示条件  |
-| ---- | ---- |
-|  /  |  誰でもみれる  |
-|  /thread/comment:id  |  誰でもみれる  |
-|  /login  |  未ログインのみ  |
-|  /signup  |  未ログインのみ  |
-|  /thread/create  |  ログイン済みのみ  |
-|  /thread/edit:id  |  ログイン済みのみ  |
-|  合計  |  6画面  |
+Postman+を使い、バックエンドから開発
+<img src="gitpitch-img/postman.png"/>  
+---
+ローカルでの動作環境
+<img src="gitpitch-img/localimg.png"/>  
+---
+本番ではReactのコードはbuildされて１つのindex.htmlになります
+---
+- ①ブラウザからアクセス |
+- ②build済みindex.htmlを返す |
+- ③コメント書き込み |
+- ④データベースから返ってきたjsonを返す |
+<img src="gitpitch-img/productimg.png"/>  
+---
+### フォルダ構成
+<img src="gitpitch-img/folder.png"/>  
+---
+### ER図(テーブル)
+<img src="gitpitch-img/table.png"/>  
+---
+### つまり
+- １つのスレッドには0 or 複数のコメントが結びついている |
+- スレッド、コメント、いいねは[user_id]を紐付けて、誰がしたか分かる |
+- ユーザがどのスレッドにいいね、またはコメントしたか分かる |
 
 ---
+### フロント側画面構成
 <table>
 <thead>
 <tr>
@@ -76,7 +89,14 @@
 </tbody>
 </table>
 ---
-フロント側で必要な情報
+### 認証方法
+---
+### 方法(2種類)
+
+- 1. 認証情報をlocalstrage(cookieも可)に保存する |
+- 2. 外部のサービス(Auth0等)を使用する |
+---
+### フロント側で必要な情報
 1. ログインしているかどうか => accessToken 
 2. 編集・削除が可能か => ユーザーID
 
@@ -88,23 +108,9 @@
 
 ---?code=yojigen-app/src/components/PrivateRoute.js&lang=javascript&title=ログインしてなかったら
 @[9-12](accessTokenがあるならcreate/editページをロードできる)
----
-ローカルでは全て違うポート番号
-で作成します
-<img src="gitpitch-img/localimg.png"/>  
----
-本番ではExpressは静的ファイルを提供
-＋
-jsonを返すapiサーバー
-としての役割します
-<img src="gitpitch-img/localimg.png"/>  
 
-* 初期
-  * json-server+Express+postman
-* 中期
-  * json-server+Express+postman+React
-* 末期
-  * postgresDB+Express+React
+---
+フロント作成時にぶち当たった壁
 
 ---
 # 本番デプロイ時
@@ -131,5 +137,4 @@ jsonを返すapiサーバー
 @[385-387](これがないとlocalでは動くが、本番環境では動かない)
 
 ---
-# 最後に
 最後までありがとうございました。
