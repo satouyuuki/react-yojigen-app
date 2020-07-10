@@ -14,7 +14,7 @@
 <a href="https://yojigen-app.herokuapp.com/" target="_brank">リンク</a>
 
 ---
-# 使用した技術
+### 使用した技術
 
 - フロントエンド: React |
 - バックエンド: Express(nodejs版のlaravelやrailsのようなもの) |
@@ -23,21 +23,22 @@
 ---
 ### 進め方
 ---
-Postman+を使い、バックエンドから開発
+Postmanを使い、バックエンドから開発
 <img src="gitpitch-img/postman.png"/>  
 ---
+その後Reactでフロントページを作成し、herokuにデプロイ
+---
 ローカルでの動作環境
+
 <img src="gitpitch-img/localimg.png"/>  
+
 ---
-本番ではReactのコードはbuildされて１つのindex.htmlになります
----
-- ①ブラウザからアクセス |
-- ②build済みindex.htmlを返す |
-- ③コメント書き込み |
-- ④データベースから返ってきたjsonを返す |
+### 本番環境(heroku)
+- build済みindex.htmlを返す
+- データベースから返ってきたjsonを返す
 <img src="gitpitch-img/productimg.png"/>  
 ---
-### フォルダ構成
+フォルダ構成
 <img src="gitpitch-img/folder.png"/>  
 ---
 ### ER図(テーブル)
@@ -90,34 +91,27 @@ Postman+を使い、バックエンドから開発
 </tbody>
 </table>
 ---
-### 認証方法
----
-### 方法(2種類)
-
-- 1. 認証情報をlocalstrage(cookieも可)に保存する |
-- 2. 外部のサービス(Auth0等)を使用する |
----
 ### フロント側で必要な情報
 1. ログインしているかどうか => accessToken 
 2. 編集・削除が可能か => ユーザーID
 
----?code=yojigen-app/src/components/User.js&lang=javascript&title=ログインしてるかどうか
+---?code=yojigen-app/src/components/User.js&lang=javascript&title=login or not
 @[2](ローカルストレージにtokenがあるかどうか判定)
 
----?code=yojigen-app/src/components/GuestRoute.js&lang=javascript&title=ログインしてたら
+---?code=yojigen-app/src/components/GuestRoute.js&lang=javascript&title=not
 @[9-12](accessTokenがないならlogin/signupページをロードできる)
 
----?code=yojigen-app/src/components/PrivateRoute.js&lang=javascript&title=ログインしてなかったら
+---?code=yojigen-app/src/components/PrivateRoute.js&lang=javascript&title=login
 @[9-12](accessTokenがあるならcreate/editページをロードできる)
 
 ---
 フロント作成時にぶち当たった壁
 
 ---
-# 本番デプロイ時
+### 本番デプロイ時
 
 ---
-# コード側
+### コード側
 * Express側
   * Procfileの作成(Expressサーバーの起動コマンド)
   * .envファイルに環境変数を記載
@@ -125,7 +119,7 @@ Postman+を使い、バックエンドから開発
   * static.jsonの作成(heroku標準のwebpackから切り替えるため)
 
 ---
-# heroku側
+### heroku側
 * githubとherokuの連携(任意)
 * add-onの追加(postgres)
 * 環境変数の追加(postgres環境変数とaccessToken変数)
