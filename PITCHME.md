@@ -17,7 +17,7 @@
 ### 使用した技術
 
 - フロントエンド: React |
-- バックエンド: Express(nodejs版のlaravelやrailsのようなもの) |
+- バックエンド: Express<br>(nodejs版のlaravelやrailsのようなもの) |
 - インフラ/db: Heroku/postgres |
 
 ---
@@ -33,18 +33,22 @@ Postmanを使い、バックエンドから開発<br>
 - build済みindex.htmlを返す
 - データベースから返ってきたjsonを返す
 <img src="gitpitch-img/productimg.png"/>  
----
-フォルダ構成
-<img src="gitpitch-img/folder.png"/>  
 ---?code=server.js&lang=javascript&title=server.js
 
 @[15](buildしたフロントページを返す)
+---?code=server.js&lang=javascript&title=server.js
+
+@[72-86](データベースに書き込み、jsonを返す)
+---
+フォルダ構成
+<img src="gitpitch-img/folder.png"/>  
+
 ---
 ### ER図(テーブル)
 <img src="gitpitch-img/table.png"/>  
 ---
 ### つまり
-- １つのスレッドには0 or 複数のコメントが結びついている |
+- １つのスレッドには0 or 複数のコメント、いいねが結びついている |
 - スレッド、コメント、いいねは[user_id]を紐付けて、誰がしたか分かる |
 
 ---
