@@ -11,7 +11,7 @@
 ---
 ### 実際に作ったもの
 
-<a href="https://yojigen-app.herokuapp.com/" target="_brank">リンク</a>
+<a href="https://yojigen-app.herokuapp.com/" target="_blank">リンク</a>
 
 ---
 ### 使用した技術
